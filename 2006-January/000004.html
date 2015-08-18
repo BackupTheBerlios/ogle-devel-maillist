@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] [PATCH] ASM-optimized byteswap functions
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20%5BPATCH%5D%20ASM-optimized%20byteswap%20functions&In-Reply-To=%3C20060118235731.GD11287%40biurrun.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000003.html">
+   <LINK REL="Next"  HREF="000005.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] [PATCH] ASM-optimized byteswap functions</H1>
+    <B>Diego Biurrun</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20%5BPATCH%5D%20ASM-optimized%20byteswap%20functions&In-Reply-To=%3C20060118235731.GD11287%40biurrun.de%3E"
+       TITLE="[Ogle-devel] [PATCH] ASM-optimized byteswap functions">diego at biurrun.de
+       </A><BR>
+    <I>Thu Jan 19 00:58:00 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000003.html">[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+</A></li>
+        <LI>Next message: <A HREF="000005.html">[Ogle-devel] new release status
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi,
+
+this stuff has been sitting in the MPlayer tree forever.
+
+Please review / apply.
+
+Diego
+-------------- next part --------------
+Index: dvdread/bswap.h
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/bswap.h,v
+retrieving revision 1.13
+diff -u -r1.13 bswap.h
+--- dvdread/bswap.h	19 Sep 2005 14:14:34 -0000	1.13
++++ dvdread/bswap.h	18 Jan 2006 23:54:49 -0000
+@@ -76,6 +76,44 @@
+ #define B2N_32(x) x = be32toh(x)
+ #define B2N_64(x) x = be64toh(x)
+ 
++#elif defined(ARCH_X86)
++inline static unsigned short bswap_16(unsigned short x)
++{
++  __asm(&quot;xchgb %b0,%h0&quot; :
++        &quot;=q&quot; (x)        :
++        &quot;0&quot; (x));
++    return x;
++}
++#define B2N_16(x) x = bswap_16(x)
++
++inline static unsigned int bswap_32(unsigned int x)
++{
++ __asm(
++#if __CPU__ &gt; 386
++      &quot;bswap   %0&quot;:
++      &quot;=r&quot; (x)     :
++#else
++      &quot;xchgb   %b0,%h0\n&quot;
++      &quot; rorl    $16,%0\n&quot;
++      &quot; xchgb   %b0,%h0&quot;:
++      &quot;=q&quot; (x)          :
++#endif
++      &quot;0&quot; (x));
++  return x;
++}
++#define B2N_32(x) x = bswap_32(x)
++
++inline static unsigned long long int bswap_64(unsigned long long int x)
++{
++  register union { __extension__ uint64_t __ll;
++          uint32_t __l[2]; } __x;
++  asm(&quot;xchgl    %0,%1&quot;:
++      &quot;=r&quot;(__x.__l[0]),&quot;=r&quot;(__x.__l[1]):
++      &quot;0&quot;(bswap_32((unsigned long)x)),&quot;1&quot;(bswap_32((unsigned long)(x&gt;&gt;32))));
++  return __x.__ll;
++}
++#define B2N_64(x) x = bswap_64(x)
++
+ /* This is a slow but portable implementation, it has multiple evaluation 
+  * problems so beware.
+  * Old FreeBSD's and Solaris don't have &lt;byteswap.h&gt; or any other such 
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000003.html">[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+</A></li>
+	<LI>Next message: <A HREF="000005.html">[Ogle-devel] new release status
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

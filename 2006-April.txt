@@ -1,0 +1,158 @@
+From oggy at piments.com  Thu Apr  6 19:29:01 2006
+From: oggy at piments.com (oggy at piments.com)
+Date: Thu Apr  6 19:29:01 2006
+Subject: [Ogle-devel] ogle plays DVD video at double speed.
+Message-ID: <op.s63d7jgznze9d7@mail.piments.com>
+
+Hi,
+
+I have ogle running beautifully on suse 9.2 but when installed on gentoo I  
+get double speed video with no sound. (In fact I can chroot to suse from  
+gentoo and ogle works fine, so that seems to rule out kernel or sound  
+driver issues).
+
+
+I presume the lack of audio is because it is playing double speed.
+It's so close to working that I dont think the problem can be that great.
+
+I'm using a commercial pressing of shrek to test with. I get this to the  
+console:
+
+ERROR[ogle_audio]: odelay error: Input/output error
+-ERROR[ogle_audio]: odelay error: Input/output error
+ERROR[ogle_audio]: odelay error: Input/output error
+ERROR[ogle_audio]: odelay error: Input/output error
+###!!!!##!!!!#--#!!###!!#!!!!-##!!!!#--###!!!##!!!!#!-###!!!#--###!!!!##!!!#-###!!--####!!#!!!!#--####!!#!!!!#-##!!##--###!!!##!!!#-##!!#--!!###!!!!!!##!-##!!##--###!!!##!!!!#-##!!!##-###!!!!#-###!!!#--###!!!!##!!--####!!#!!!!#-##!!##--###!!!##!!!!#-###!#!!-####!!--###!!!!!!###!!-###!!!#-
+
+
+
+[ebuild   R   ] media-libs/libdvdcss-1.2.8
+[ebuild   R   ] media-libs/libdvdread-0.9.5
+[ebuild   R   ] media-video/ogle-0.9.2-r1
+[ebuild   R   ] media-libs/a52dec-0.7.4-r5
+
+these are the same versions running on suse without trouble.
+
+initially I had libdvdread 0.9.4 from gentoo patched with
+  http://dvdauthor.sourceforge.net/patches/libdvdread-0.9.4.patch.gz
+
+I build 0.9.5 without that patch , neither seems to affect the above issue.
+
+
+Thanks in advance if you can suggest how to resolve these issues. Ogle is  
+a great play back tool.
+
+
+From cosine at freesoft.org  Thu Apr  6 19:29:53 2006
+From: cosine at freesoft.org (Brent Baccala)
+Date: Thu Apr  6 19:29:53 2006
+Subject: [Ogle-devel] [PATCH] ogle - updating TTN in get_VTS_TT/get_VTS_PTT
+Message-ID: <Pine.LNX.4.44.0604030903450.18093-200000@vger.freesoft.org>
+
+Hi -
+
+These two functions had comments in them that stated "must search tt_srpt
+for a matching entry".  I've added (correctly, I hope) the missing code,
+which was breaking the menu selection logic on a DVD I've got.
+
+The patch works against both 0.9.2 and your CVS version.
+
+Please let me know if there's something you wish me to do other than just
+mail this to your devel list.
+
+
+
+					-bwb
+
+					Brent Baccala
+					cosine at freesoft.org
+-------------- next part --------------
+--- ogle-0.9.2.dist/vmg/vm.c	2003-08-06 13:29:30.000000000 -0400
++++ ogle-0.9.2/vmg/vm.c	2006-03-13 16:57:33.000000000 -0500
+@@ -1580,7 +1580,29 @@
+   assert(pgcN != -1);
+   //assert(pgcN == vtsi->vts_ptt_srpt->title[vts_ttn - 1].ptt[0].pgcn); ??
+   
+-  //state.TTN_REG = ?? Must search tt_srpt for a matching entry...  
++  // Search tt_srpt array for the entry that matches this titleset/title
++  // pair.  The offset will be the global title number (TTN), as opposed
++  // to the local title number within the titleset (VTS_TTN).
++
++  if (vmgi->tt_srpt == NULL) {
++    fprintf(stderr, "vmgi->tt_srpt is NULL\n");
++  } else {
++    for (state.TTN_REG = 0;
++	 state.TTN_REG < vmgi->tt_srpt->nr_of_srpts;
++	 state.TTN_REG ++) {
++      if ((vmgi->tt_srpt->title[state.TTN_REG].title_set_nr == vtsN)
++	  && (vmgi->tt_srpt->title[state.TTN_REG].vts_ttn == vts_ttn)) break;
++    }
++    if (state.TTN_REG == vmgi->tt_srpt->nr_of_srpts) {
++      fprintf(stderr, "Couldn't find VTS %d / TTN %d in TT_SRPT table?!\n",
++	      vtsN, vts_ttn);
++      state.TTN_REG = 0;
++    } else {
++      /* TTN_REG is one-based; the code above computed the answer zero-based */
++      state.TTN_REG ++;
++    }
++  }
++
+   state.VTS_TTN_REG = vts_ttn;
+   /* Any other registers? */
+   
+@@ -1604,7 +1626,29 @@
+   
+   //assert(pgcN == get_ID(vts_ttn); ??
+   
+-  //state.TTN_REG = ?? Must search tt_srpt for a matchhing entry...
++  // Search tt_srpt array for the entry that matches this titleset/title
++  // pair.  The offset will be the global title number (TTN), as opposed
++  // to the local title number within the titleset (VTS_TTN).
++
++  if (vmgi->tt_srpt == NULL) {
++    fprintf(stderr, "vmgi->tt_srpt is NULL\n");
++  } else {
++    for (state.TTN_REG = 0;
++	 state.TTN_REG < vmgi->tt_srpt->nr_of_srpts;
++	 state.TTN_REG ++) {
++      if ((vmgi->tt_srpt->title[state.TTN_REG].title_set_nr == vtsN)
++	  && (vmgi->tt_srpt->title[state.TTN_REG].vts_ttn == vts_ttn)) break;
++    }
++    if (state.TTN_REG == vmgi->tt_srpt->nr_of_srpts) {
++      fprintf(stderr, "Couldn't find VTS %d / TTN %d in TT_SRPT table?!\n",
++	      vtsN, vts_ttn);
++      state.TTN_REG = 0;
++    } else {
++      /* TTN_REG is one-based; the code above computed the answer zero-based */
++      state.TTN_REG ++;
++    }
++  }
++
+   state.VTS_TTN_REG = vts_ttn;
+   /* Any other registers? */
+   
+
+From johannes.tanzler at aon.at  Mon Apr 17 21:39:01 2006
+From: johannes.tanzler at aon.at (Johannes Tanzler)
+Date: Mon Apr 17 21:39:01 2006
+Subject: [Ogle-devel] GUI: customized glade2 file
+Message-ID: <1145302738.4712.15.camel@localhost.localdomain>
+
+Hi,
+
+Since I don't like ogle_gui's default look, I played around with
+the glade2-file: Less icons, more menu entries, key-bindings etc.
+
+I've attached my version; it requires a recent version of 
+gtk2 (2.8.x?). Maybe, it's of use for you.
+
+regards,
+Johannes
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: ogle_gui.glade2.bz2
+Type: application/x-bzip
+Size: 3639 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/ogle-devel/attachments/20060417/053c7338/attachment.bin>
+

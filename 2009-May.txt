@@ -1,0 +1,63 @@
+From gary at inauspicious.org  Thu May 21 13:04:58 2009
+From: gary at inauspicious.org (Gary Benson)
+Date: Thu, 21 May 2009 12:04:58 +0100
+Subject: [Ogle-devel] Unreadable DVD
+Message-ID: <20090521110456.GB3172@inauspicious.org>
+
+Hi all,
+
+I have a DVD that I can't read with libdvdread.  If I try lsdvd, it
+says this:
+
+  $ lsdvd
+  libdvdread: Encrypted DVD support unavailable.
+  
+  *** libdvdread: CHECK_VALUE failed in /builddir/build/BUILD/libdvdread-4.1.3/src/ifo_read.c:1571 ***
+  *** for info_length % sizeof(cell_adr_t) == 0 ***
+  
+  
+  *** libdvdread: CHECK_VALUE failed in /builddir/build/BUILD/libdvdread-4.1.3/src/ifo_read.c:1704 ***
+  *** for info_length % sizeof(uint32_t) == 0 ***
+  
+  
+  *** libdvdread: CHECK_VALUE failed in /builddir/build/BUILD/libdvdread-4.1.3/src/ifo_read.c:1571 ***
+  *** for info_length % sizeof(cell_adr_t) == 0 ***
+  
+  libdvdread: Invalid title IFO (VTS_01_0.IFO).
+  Can't open ifo 1!
+
+Any suggestions as to how I can debug this?
+
+Cheers,
+Gary
+
+--
+http://gbenson.net/
+
+
+From gary at inauspicious.org  Thu May 21 19:12:08 2009
+From: gary at inauspicious.org (Gary Benson)
+Date: Thu, 21 May 2009 18:12:08 +0100
+Subject: [Ogle-devel] Unreadable DVD
+In-Reply-To: <20090521110456.GB3172@inauspicious.org>
+References: <20090521110456.GB3172@inauspicious.org>
+Message-ID: <20090521171207.GA18595@inauspicious.org>
+
+Gary Benson wrote:
+> I have a DVD that I can't read with libdvdread.  If I try lsdvd,
+> it says this:
+> 
+>   $ lsdvd
+>   libdvdread: Encrypted DVD support unavailable.
+[snip]
+
+Ah, ignore the noise, I just realised I didn't have libdvdcss
+installed.
+
+Cheers,
+Gary
+
+--
+http://gbenson.net/
+
+

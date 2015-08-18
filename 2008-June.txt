@@ -1,0 +1,282 @@
+From zanga.mail at gmail.com  Sun Jun  1 23:24:21 2008
+From: zanga.mail at gmail.com (Stefano D'Angelo)
+Date: Sun, 1 Jun 2008 23:24:21 +0200
+Subject: [Ogle-devel] [EPAMP] an effect plugin API for media players: anyone
+	interested?
+Message-ID: <160c13350806011424m6921caeaw375ffb2d9a721a60@mail.gmail.com>
+
+Hello,
+
+First of all, I'm sorry for the worst cross-posting ever.
+
+My name's Stefano D'Angelo and I'm the author of NASPRO
+(http://naspro.atheme.org), a project whose main aim is to build up a
+system to make all sound processing APIs interoperable.
+
+Since my project was recently accepted to become part of the Atheme
+community (http://www.atheme.org) and began working close to the
+audacious (http://audacious-media-player.org) developers, I could see
+there actually were serious reasons behind the lack of standardization
+for sound processing in the arena of media players.
+
+Now, I wrote a first draft of a new sound processing API called EPAMP
+especially targetted at media players; you can find it here:
+http://naspro.atheme.org/content/epamp-draft-1
+
+With this mail, I'm trying to get some feedback (possibly in the Talk
+page on the NASPRO wiki) about it and possibly to involve anyone who
+is interested in its development.
+
+Anyway, notice that the user interface part of the API is still
+missing and that my project (NASPRO) will support this new API, giving
+applications using it the possibility to access non-EPAMP plugins
+without touching a single line of code (currently supported APIs are
+audacious' and LADSPA, while DSSI, LV2, GStreamer and possibly VST are
+more or less planned for the near future).
+
+In case you're not interested and want to start a flame, please just ignore me.
+
+This message is being sent to the communities/developers behind the
+following projects:
+ - Amarok
+ - Aqualung
+ - Audio Overload
+ - BMPx
+ - Banshee
+ - cmus
+ - Decibel Audio Player
+ - Exaile
+ - FALF Player
+ - Freevo
+ - GStreamer
+ - Helix Player
+ - Herrie
+ - JaJuk
+ - JuK (KDE multimedia)
+ - Linux Audio Developers
+ - KPlayer
+ - Kaffeine
+ - lamip
+ - The LAMP
+ - MPlayer
+ - Miro
+ - mpg123
+ - mpg321
+ - Muine
+ - MPD
+ - music on console
+ - Noatun
+ - ogg123 (vorbis-tools)
+ - Ogle
+ - Quod Libet
+ - Rhythmbox
+ - Sipie
+ - SnackAmp
+ - Sonata
+ - Songbird
+ - UADE
+ - SMPlayer
+ - VLC
+ - wxMusik
+ - XMMS2
+ - Xfmedia
+ - Xine
+ - Zinf
+
+If you know someone else who could be interested, feel free to forward this.
+
+Best regards,
+
+Stefano D'Angelo
+zanga.mail at gmail.com
+
+
+From lundman at lundman.net  Sat Jun 21 06:40:49 2008
+From: lundman at lundman.net (lundman)
+Date: Sat, 21 Jun 2008 13:40:49 +0900
+Subject: [Ogle-devel] libdvdread UDF2.5
+Message-ID: <485C8651.2070707@lundman.net>
+
+
+I realise this list has been rather dead lately, but maybe there are a 
+few lurkers out there who might be interested in helping.
+
+I was looking at the possibility to get libdvdread to read the new 
+fangled BD5 .ISO files, which mostly are just UDF2.50 (at a guess). In 
+my example, I called the ISO file "highlander.iso".
+
+If I step through the code attempting to open an ISO file, I get the 
+following happen:
+
+
+(gdb)
+#0  UDFFindFile (device=0x409170, filename=0x2f378 "/", filesize=0x0) at 
+dvd_udf.c:979
+#1  0x00026f8d in DVDOpenImageFile (location=0x409560 
+"highlander-bd5.iso", have_css=0) at dvd_reader.c:333
+#2  0x000272fd in DVDOpen (path=0x409200 "highlander-bd5.iso") at 
+dvd_reader.c:488
+
+
+   /* sanity check, is it a valid UDF image, can we find the root dir */
+   if(!UDFFindFile(dvd, "/", NULL)) {
+
+
+#0  UDFFindFile (device=0x409170, filename=0x2f378 "/", filesize=0x0) at 
+dvd_udf.c:979
+(gdb) n
+982       tokenline[0] = '\0';
+(gdb) n
+983       strcat( tokenline, filename );
+(gdb) n
+986       if(!(GetUDFCache(device, PartitionCache, 0, &partition) &&
+(gdb) n
+989         if( !UDFFindPartition( device, 0, &partition ) ) {
+(gdb) n
+992         SetUDFCache(device, PartitionCache, 0, &partition);
+(gdb) p partition
+$2 = {
+   valid = 1,
+   VolumeDesc = "HIGHLANDER", '\0' <repeats 54 times>, 
+"\003\000\000\000?@\000P?@ 
+ 
+@\000H???\000\000\000\000\000\000?\001\b\000\003\000\000\000\000\000]Y\001?\004\0 
+ 
+  000\000\000>?\002\000H????&\000?\000\000\000\000?h\002\000X???",
+   Flags = 1,
+   Number = 0,
+   Contents = "\000+NSR03", '\0' <repeats 24 times>,
+   AccessType = 4232544,
+   Start = 288,
+   Length = 2291200
+}
+(gdb)
+994         LogBlock = dvdalign_lbmalloc(device, 1);
+(gdb)
+995         if(!LogBlock) {
+
+
+
+
+
+(gdb) n
+999         lbnum = partition.Start;
+(gdb)
+1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+(gdb)
+1004            UDFDescriptor( LogBlock, &TagID );
+(gdb)
+1007          printf("TagID %d\n", TagID);
+(gdb)
+TagID 266
+1009          if( TagID == 256 ) {  // File Set Descriptor
+(gdb)
+1014                 && ( TagID != 8 ) && ( TagID != 256 ) );
+(gdb)
+1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+(gdb)
+1004            UDFDescriptor( LogBlock, &TagID );
+(gdb)
+1007          printf("TagID %d\n", TagID);
+(gdb)
+TagID 0
+1009          if( TagID == 256 ) {  // File Set Descriptor
+(gdb)
+1014                 && ( TagID != 8 ) && ( TagID != 256 ) );
+(gdb)
+1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+(gdb)
+1004            UDFDescriptor( LogBlock, &TagID );
+(gdb)
+1007          printf("TagID %d\n", TagID);
+(gdb)
+TagID 0
+
+[snip] It reads TagID=0 for about 32 blocks.
+
+
+
+1004            UDFDescriptor( LogBlock, &TagID );
+(gdb)
+1007          printf("TagID %d\n", TagID);
+(gdb)
+TagID 256
+1009          if( TagID == 256 ) {  // File Set Descriptor
+(gdb) p lbnum
+$3 = 321
+1010            UDFLongAD( &LogBlock[ 400 ], &RootICB );
+(gdb)
+1014                 && ( TagID != 8 ) && ( TagID != 256 ) );
+(gdb) p RootICB
+$4 = {
+   Location = 2,
+   Length = 2048,
+   Flags = 0 '\0',
+   Partition = 1
+}
+
+(gdb) n
+1016        dvdalign_lbfree(device, LogBlock);
+(gdb) n
+1019        if( TagID != 256 ) {
+(gdb) n
+1022        if( RootICB.Partition != 0 ) {
+(gdb) n
+1023          printf("RootICB.Partition %d.\n", RootICB.Partition);
+
+
+This is the first place we would error out, as our Partition is "1" and 
+not the expected "0". If we ignore it:
+
+
+(gdb) n
+1028        SetUDFCache(device, RootICBCache, 0, &RootICB);
+(gdb) n
+1032      if( !UDFMapICB( device, RootICB, &filetype, &partition, &File 
+) ) {
+(gdb) s
+UDFMapICB (device=0x409170, ICB={Location = 2, Length = 2048, Flags = 0 
+'\0', Partition = 1}, FileType=0xbfffe483 "\004/", partition=0xbfffeca8, 
+File=0xbfffec90) at dvd_udf.c:660
+660       lbnum = partition->Start + ICB.Location;
+(gdb) p lbnum
+$5 = 4234400
+
+
+(gdb) n
+661       tmpmap.lbn = lbnum;
+(gdb) n
+662       if(GetUDFCache(device, MapCache, lbnum, &tmpmap)) {
+(gdb) n
+668       LogBlock = dvdalign_lbmalloc(device, 1);
+(gdb) n
+669       if(!LogBlock) {
+(gdb) n
+674         if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+(gdb) n
+677           UDFDescriptor( LogBlock, &TagID );
+(gdb) n
+680         printf(" TagID %d\n", TagID);
+(gdb) n
+  TagID 0
+682         if( TagID == 261 ) {
+(gdb) n
+691                  / DVD_VIDEO_LB_LEN ) && ( TagID != 261 ) );
+(gdb) n
+693       dvdalign_lbfree(device, LogBlock);
+(gdb) n
+694       return 0;
+
+And this is the next place we fail. It wants TagID 261, but gets 0. it 
+only tries for 1 block. If I make the while() continue until we get a 
+261, it takes about 300 blocks, and then the filetype is wastly 
+different to "4".
+
+
+Anyone have a rough idea at the size of the task to support 2.50/2.60?
+
+
+Lund
+
+
+

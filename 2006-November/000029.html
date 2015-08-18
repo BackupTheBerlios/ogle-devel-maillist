@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] War on magic numbers
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-November/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20War%20on%20magic%20numbers&In-Reply-To=%3C20061104143738.GB23403%40dtek.chalmers.se%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000030.html">
+   <LINK REL="Next"  HREF="000031.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] War on magic numbers</H1>
+    <B>Bj|rn Englund</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20War%20on%20magic%20numbers&In-Reply-To=%3C20061104143738.GB23403%40dtek.chalmers.se%3E"
+       TITLE="[Ogle-devel] War on magic numbers">d4bjorn at dtek.chalmers.se
+       </A><BR>
+    <I>Sat Nov  4 15:37:38 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000030.html">[Ogle-devel] strange behavior of DVDFileStat
+</A></li>
+        <LI>Next message: <A HREF="000031.html">[Ogle-devel] War on magic numbers
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>
+Hi.
+
+Sat Oct 28 2006, Justin Moore wrote:
+&gt;<i> 
+</I>&gt;<i>     Too many places in the codebase have &quot;magic numbers&quot;: hard-coded 
+</I>&gt;<i> constants that should really be replaced with #define'd values or 
+</I>&gt;<i> enum'ed values.  A few questions:
+</I>&gt;<i> 
+</I>&gt;<i> o do you prefer #define'd values or enums?
+</I>
+For these things probably #defines if you don't have a particular reason
+to use enums.
+
+&gt;<i> 
+</I>&gt;<i> o should I create a separete dvdread/constants.h or should I place the 
+</I>&gt;<i> values in the header file that matches the .c file in which they're 
+</I>&gt;<i> contained (e.g., FPS_2500 and FPS_2997 go in ifo_print.h or should I put 
+</I>&gt;<i> everything in *_types.h?
+</I>
+Things that has to do with fields in ifo_types.h should go in ifo_types.h
+like video_format in video_attr_t:
+#define  xxxx_VIDEO_FORMAT_NTSC 0
+#define  xxxx_VIDEO_FORMAT_PAL 1
+
+Things that are internal to libdvdread should not be put in the
+installed header files.
+
+There should be a naming scheme. We need a prefix for the defines
+in installed header files. Instead of only VIDEO_FORMAT_NTSC it should
+probably be called DVDREAD_VIDEO_FORMAT_NTSC or something like that.
+
+&gt;<i> 
+</I>&gt;<i> o what is the patch submission process?
+</I>&gt;<i> 
+</I>
+Send the patches to the ogle-devel list.
+(Keep them small, don't submit unrelated changes in the same patch,
+everything should compile after each patch is applied)
+
+/Bj|rn
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000030.html">[Ogle-devel] strange behavior of DVDFileStat
+</A></li>
+	<LI>Next message: <A HREF="000031.html">[Ogle-devel] War on magic numbers
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

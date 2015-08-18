@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] strange behavior of DVDFileStat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20strange%20behavior%20of%20DVDFileStat&In-Reply-To=%3CPine.LNX.4.64.0610261929530.30827%40grozny.maths.univ-evry.fr%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000025.html">
+   <LINK REL="Next"  HREF="000027.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] strange behavior of DVDFileStat</H1>
+    <B>Vincent Torri</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20strange%20behavior%20of%20DVDFileStat&In-Reply-To=%3CPine.LNX.4.64.0610261929530.30827%40grozny.maths.univ-evry.fr%3E"
+       TITLE="[Ogle-devel] strange behavior of DVDFileStat">vtorri at univ-evry.fr
+       </A><BR>
+    <I>Thu Oct 26 19:40:10 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000025.html">[Ogle-devel] libdvdread-0.9.7 released (bugfix only)
+</A></li>
+        <LI>Next message: <A HREF="000027.html">[Ogle-devel] War on magic numbers
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>
+Hello,
+
+I'm writing a small gtk gui that try to list the content of a DVD. I use 
+the filestat.c code for that part. With a DVDROM, file stat returns:
+
+VIDEO_TS.IFO: size: 12288
+VIDEO_TS.VOB: size: 165888
+VIDEO_TS.BUP: size: 12288
+VTS_01_0.IFO: size: 94208
+VTS_01_0.VOB: size: 420061184
+VTS_01_[1-9].VOB: size: 7239475200, [1073489920], [1073442816], 
+[1073612800], [1073672192], [1073225728], [1073483776], [798547968]
+VTS_01_0.BUP: size: 94208
+
+which is perfect. But with my gui, everything is good, except when I try 
+to get the stats of the DVD_READ_TITLE_VOBS domain. I get:
+
+for the size: 2944507904 (should be 7239475200)
+for the number of titles: 1 (should be 7)
+
+I don't undersand at all, as I mimic the filestat code. Sometimes the 
+program seg fault (gdb is of no help, as it returns no useful 
+informations, even with stepping), sometimes, gtk returns an internal 
+problem, sometimes no problem except the wrong values.
+
+I fear a corruption of the memory, but I don't know where. There might be 
+a bug in my program too.
+
+I've attached the prog. Just run make to compile it. The main code is in 
+gvob_main_window.c (_gvob_player_selected_cb function, line 35)
+
+Can someone tell me if there's a bug in my implementation, or if there's a 
+known bug with libdvdread / gtk, or something else ?
+
+thank you very much
+
+Vincent Torri
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: gvob-0.1.tar.bz2
+Type: application/octet-stream
+Size: 4226 bytes
+Desc: 
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/ogle-devel/attachments/20061026/9716a3ae/attachment.obj">https://lists.berlios.de/pipermail/ogle-devel/attachments/20061026/9716a3ae/attachment.obj</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000025.html">[Ogle-devel] libdvdread-0.9.7 released (bugfix only)
+</A></li>
+	<LI>Next message: <A HREF="000027.html">[Ogle-devel] War on magic numbers
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

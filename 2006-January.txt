@@ -1,0 +1,874 @@
+From mikael.hedin at gmx.net  Wed Jan 18 22:21:01 2006
+From: mikael.hedin at gmx.net (Mikael Hedin)
+Date: Wed Jan 18 22:21:01 2006
+Subject: [Ogle-devel] Fwd: Bug#347276: libdvdread3: say that one should be root in the error messages
+References: <20060109203057.8980.82947.reportbug@jidanni1>
+Message-ID: <7A59A8C4-F0F3-422F-9C48-4F604821D3F0@gmx.net>
+
+Is this error message optimal? I the device access needed for more  
+than css auth? Then the error should be from libdvdcss?
+
+See http://bugs.debian.org/347276 for the whole conversation.
+
+/Micce
+
+Vidarebefordrat brev:
+
+> Returnerat fr?n: Dan Jacobson <jidanni at jidanni.org>
+> Fr?n: Dan Jacobson <jidanni at jidanni.org>
+> Datum: m?ndag 9 jan 2006 21.30.57 GMT+01:00
+> Returnerat till: debian-bugs-dist at lists.debian.org
+> Till: Debian Bug Tracking System <submit at bugs.debian.org>
+> Returnerat (kopia): robos at muon.de, Mikael Hedin <micce at debian.org>
+> ?mne: Bug#347276: libdvdread3: say that one should be root in the  
+> error messages
+> Svara till: Dan Jacobson <jidanni at jidanni.org>, 347276 at bugs.debian.org
+>
+> Package: libdvdread3
+> Version: 0.9.4-5.1
+> Severity: minor
+>
+> The problem is that the user was not root.
+> If that was mentioned in the error messages, it would have saved lots
+> of head scratching. By the way, the user, not root, mounted the DVD.
+>
+> ...
+> libdvdread: Can't open /dev/cdrom for reading
+> ...
+> [Error] Path thingy didn't work '(null)'
+> [Error] Try someting like -i /cdrom, /dvd  or /mnt/dvd
+> $ vobcopy  -i /cdrom/ -m
+> [Hint] You use -i. Normally this is not necessary, vobcopy finds  
+> the input dir b
+> y itself. This option is only there if vobcopy makes trouble.
+> [Hint] If vobcopy makes trouble, please mail me so that I can fix  
+> this (robos at mu
+> on.de). Thanks
+> Vobcopy 0.5.14 - GPL Copyright (c) 2001 - 2004 robos at muon.de
+> [Hint] All lines starting with "libdvdread:" are not from vobcopy  
+> but from the l
+> ibdvdread-library
+> Device /cdrom mount on /dev/hdc
+>
+> path to dvd: /dev/cdrom
+> libdvdread: Using libdvdcss version 1.2.9 for DVD access
+> libdvdread: Could not open /dev/cdrom with libdvdcss.
+> libdvdread: Can't open /dev/cdrom for reading
+>
+> [Error] Path thingy didn't work '(null)'
+> [Error] Try someting like -i /cdrom, /dvd  or /mnt/dvd
+> $ df /cdrom/
+> Filesystem           1K-blocks      Used Available Use% Mounted on
+> /dev/hdc               3369440   3369440         0 100% /cdrom
+> $ mount|grep ...
+> /dev/hdc on /cdrom type iso9660  
+> (ro,noexec,nosuid,nodev,iocharset=cp950,user=jidanni)
+>
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: Mikael Hedin.vcf
+Type: text/directory
+Size: 357 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/ogle-devel/attachments/20060118/b3817688/attachment.bin>
+-------------- next part --------------
+
+
+
+From diego at biurrun.de  Thu Jan 19 00:35:01 2006
+From: diego at biurrun.de (Diego Biurrun)
+Date: Thu Jan 19 00:35:01 2006
+Subject: [Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+Message-ID: <20060118233418.GA11287@biurrun.de>
+
+Hi,
+
+this patch was submitted in August 2005 to MPlayer.  It was applied with
+slight modifications, please review and maybe apply it to libdvdread.
+The patch is attached, the message the author sent is pasted below.
+
+Regards
+
+Diego
+
+
+http://mplayerhq.hu/pipermail/mplayer-dev-eng/2005-August/036580.html
+
+Hi all!
+
+I had to realise that mplayer entirely ignores the logical mapping info 
+between the various dvd audio/subtitle tracks and the corresponding mpeg 
+streams, and does an identity mapping instead.
+But I guess it's because libdvdread lacks the support for it :)
+So here is the patch that fixes this shortcoming...
+
+Some background info:
+The audio and subtitle streams as specified in the IFO do not correspond
+one-to-one to the streams in the mpeg-ps, but there is a mapping table
+which specifies the assignments. In case of audio this hasn't been a big
+problem unless the dvd has been really screwed up, because there are
+the same number of logical streams as mpeg streams. So maybe you have a
+0->1, 1->0 mapping in which case selecting one language in mplayer gets
+you the other soundtrack, but both tracks are accessible.
+
+Subtitles are not so simple however, because for one logical stream you
+can have multiple mpeg subpicture streams. If you create a dvd for a
+16:9 movie, you have to specify a spu stream for 4:3 letterboxed display
+and also for 16:9 widescreen display. Up to this time I have run across
+only one dvd which did not map the same stream to both modes. So not a
+frequent case, but until now mplayer could not display the subtitles
+correctly for these dvds, because it considered logical stream N to map
+to mpeg stream N. But in this case the mapping is e.g. lang1->{0,1}
+lang2->{2,3}, so when selecting lang1 mplayer would play lang1 stream
+for letterbox, and when selecting lang2, it would play lang1 stream for
+widescreen. The lang2 sub would be totally inaccessible, even with -sid,
+because the code ignores values higher than the maximum number of subs.
+
+So if you had problems like this, hopefully this will fix it. Patch is
+against the last CVS snapshot accessible from the webpage (20050806).
+
+Regards,
+Lehel
+
+
+From diego at biurrun.de  Thu Jan 19 00:36:01 2006
+From: diego at biurrun.de (Diego Biurrun)
+Date: Thu Jan 19 00:36:01 2006
+Subject: [Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+Message-ID: <20060118233526.GB11287@biurrun.de>
+
+[Once again, this time with patch attached, sorry...]
+
+Hi,
+
+this patch was submitted in August 2005 to MPlayer.  It was applied with
+slight modifications, please review and maybe apply it to libdvdread.
+The patch is attached, the message the author sent is pasted below.
+
+Regards
+
+Diego
+
+
+http://mplayerhq.hu/pipermail/mplayer-dev-eng/2005-August/036580.html
+
+Hi all!
+
+I had to realise that mplayer entirely ignores the logical mapping info 
+between the various dvd audio/subtitle tracks and the corresponding mpeg 
+streams, and does an identity mapping instead.
+But I guess it's because libdvdread lacks the support for it :)
+So here is the patch that fixes this shortcoming...
+
+Some background info:
+The audio and subtitle streams as specified in the IFO do not correspond
+one-to-one to the streams in the mpeg-ps, but there is a mapping table
+which specifies the assignments. In case of audio this hasn't been a big
+problem unless the dvd has been really screwed up, because there are
+the same number of logical streams as mpeg streams. So maybe you have a
+0->1, 1->0 mapping in which case selecting one language in mplayer gets
+you the other soundtrack, but both tracks are accessible.
+
+Subtitles are not so simple however, because for one logical stream you
+can have multiple mpeg subpicture streams. If you create a dvd for a
+16:9 movie, you have to specify a spu stream for 4:3 letterboxed display
+and also for 16:9 widescreen display. Up to this time I have run across
+only one dvd which did not map the same stream to both modes. So not a
+frequent case, but until now mplayer could not display the subtitles
+correctly for these dvds, because it considered logical stream N to map
+to mpeg stream N. But in this case the mapping is e.g. lang1->{0,1}
+lang2->{2,3}, so when selecting lang1 mplayer would play lang1 stream
+for letterbox, and when selecting lang2, it would play lang1 stream for
+widescreen. The lang2 sub would be totally inaccessible, even with -sid,
+because the code ignores values higher than the maximum number of subs.
+
+So if you had problems like this, hopefully this will fix it. Patch is
+against the last CVS snapshot accessible from the webpage (20050806).
+
+Regards,
+Lehel
+-------------- next part --------------
+diff -Naur dvdread.orig/ifo_print.c dvdread/ifo_print.c
+--- dvdread.orig/ifo_print.c	30 Jun 2005 22:48:26 -0000	1.4
++++ dvdread/ifo_print.c	3 Oct 2005 14:29:01 -0000	1.5
+@@ -761,14 +761,14 @@
+   ifoPrint_USER_OPS(&pgc->prohibited_ops);
+   
+     for(i = 0; i < 8; i++) {
+-      if(pgc->audio_control[i] & 0x8000) { /* The 'is present' bit */
++      if(pgc->audio_control[i].present) {
+ 	printf("Audio stream %i control: %04x\n", 
+ 	       i, pgc->audio_control[i]);
+       }
+     }
+   
+   for(i = 0; i < 32; i++) {
+-    if(pgc->subp_control[i] & 0x80000000) { /* The 'is present' bit */
++    if(pgc->subp_control[i].present) {
+       printf("Subpicture stream %2i control: %08x\n", 
+ 	     i, pgc->subp_control[i]);
+     }
+
+diff -Naur dvdread.orig/ifo_read.c dvdread/ifo_read.c
+--- dvdread.orig/ifo_read.c	30 Jun 2005 22:48:26 -0000	1.4
++++ dvdread/ifo_read.c	3 Oct 2005 14:29:01 -0000	1.5
+@@ -638,10 +638,6 @@
+   B2N_16(pgc->cell_playback_offset);
+   B2N_16(pgc->cell_position_offset);
+ 
+-  for(i = 0; i < 8; i++)
+-    B2N_16(pgc->audio_control[i]);
+-  for(i = 0; i < 32; i++)
+-    B2N_32(pgc->subp_control[i]);
+   for(i = 0; i < 16; i++)
+     B2N_32(pgc->palette[i]);
+   
+@@ -650,10 +646,10 @@
+ 
+   /* verify time (look at print_time) */
+   for(i = 0; i < 8; i++)
+-    if(!pgc->audio_control[i] & 0x8000) /* The 'is present' bit */
++    if(!pgc->audio_control[i].present)
+       CHECK_ZERO(pgc->audio_control[i]);
+   for(i = 0; i < 32; i++)
+-    if(!pgc->subp_control[i] & 0x80000000) /* The 'is present' bit */
++    if(!pgc->subp_control[i].present)
+       CHECK_ZERO(pgc->subp_control[i]);
+   
+   /* Check that time is 0:0:0:0 also if nr_of_programs == 0 */
+
+diff -Naur dvdread.orig/ifo_types.h dvdread/ifo_types.h
+--- dvdread.orig/ifo_types.h	2005-06-23 00:18:54.000000000 +0200
++++ dvdread/ifo_types.h	2005-06-23 00:19:10.000000000 +0200
+@@ -394,6 +394,55 @@
+ } ATTRIBUTE_PACKED user_ops_t;
+ 
+ /**
++ * Subpicture stream mapping for a subtitle
++ */
++typedef struct {
++#ifdef WORDS_BIGENDIAN
++  unsigned int present   : 1;
++  unsigned int zero1     : 2;
++  unsigned int s_4p3     : 5; /* stream for 4:3 on any display */
++
++  unsigned int zero2     : 3;
++  unsigned int s_wide    : 5; /* stream for 16:9 on widescreen display */
++
++  unsigned int zero3     : 3;
++  unsigned int s_lbox    : 5; /* stream for 16:9 on letterboxed 4:3 display */
++
++  unsigned int zero4     : 3;
++  unsigned int s_panscan : 5; /* stream for 16:9 with pan&scan data on 4:3 display */
++#else
++  unsigned int s_4p3     : 5; /* stream for 4:3 on any display */
++  unsigned int zero1     : 2;
++  unsigned int present   : 1;
++
++  unsigned int s_wide    : 5; /* stream for 16:9 on widescreen display */
++  unsigned int zero2     : 3;
++
++  unsigned int s_lbox    : 5; /* stream for 16:9 on letterboxed 4:3 display */
++  unsigned int zero3     : 3;
++
++  unsigned int s_panscan : 5; /* stream for 16:9 with pan&scan data on 4:3 display */
++  unsigned int zero4     : 3;
++#endif
++} ATTRIBUTE_PACKED subp_mapping_t;
++
++/**
++ * Audio stream mapping for a soundtrack
++ */
++typedef struct {
++#ifdef WORDS_BIGENDIAN
++  unsigned int present : 1;
++  unsigned int zero1   : 4;
++  unsigned int s_audio : 3;
++#else
++  unsigned int s_audio : 3;
++  unsigned int zero1   : 4;
++  unsigned int present : 1;
++#endif
++  uint8_t zero2;
++} ATTRIBUTE_PACKED audio_mapping_t;
++
++/**
+  * Program Chain Information.
+  */
+ typedef struct {
+@@ -402,8 +451,8 @@
+   uint8_t  nr_of_cells;
+   dvd_time_t playback_time;
+   user_ops_t prohibited_ops;
+-  uint16_t audio_control[8]; /* New type? */
+-  uint32_t subp_control[32]; /* New type? */
++  audio_mapping_t audio_control[8];
++  subp_mapping_t subp_control[32];
+   uint16_t next_pgc_nr;
+   uint16_t prev_pgc_nr;
+   uint16_t goup_pgc_nr;
+
+From diego at biurrun.de  Thu Jan 19 00:43:08 2006
+From: diego at biurrun.de (Diego Biurrun)
+Date: Thu Jan 19 00:43:08 2006
+Subject: [Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+In-Reply-To: <20060118233526.GB11287@biurrun.de>
+References: <20060118233526.GB11287@biurrun.de>
+Message-ID: <20060118234239.GC11287@biurrun.de>
+
+On Thu, Jan 19, 2006 at 12:35:26AM +0100, Diego Biurrun wrote:
+> [Once again, this time with patch attached, sorry...]
+
+And this time with a patch that actually applies cleanly to libdvdread
+CVS.  Apologies for testing everybody's patience so much..
+
+Diego
+
+> this patch was submitted in August 2005 to MPlayer.  It was applied with
+> slight modifications, please review and maybe apply it to libdvdread.
+> The patch is attached, the message the author sent is pasted below.
+> 
+> Regards
+> 
+> Diego
+> 
+> 
+> http://mplayerhq.hu/pipermail/mplayer-dev-eng/2005-August/036580.html
+> 
+> Hi all!
+> 
+> I had to realise that mplayer entirely ignores the logical mapping info 
+> between the various dvd audio/subtitle tracks and the corresponding mpeg 
+> streams, and does an identity mapping instead.
+> But I guess it's because libdvdread lacks the support for it :)
+> So here is the patch that fixes this shortcoming...
+> 
+> Some background info:
+> The audio and subtitle streams as specified in the IFO do not correspond
+> one-to-one to the streams in the mpeg-ps, but there is a mapping table
+> which specifies the assignments. In case of audio this hasn't been a big
+> problem unless the dvd has been really screwed up, because there are
+> the same number of logical streams as mpeg streams. So maybe you have a
+> 0->1, 1->0 mapping in which case selecting one language in mplayer gets
+> you the other soundtrack, but both tracks are accessible.
+> 
+> Subtitles are not so simple however, because for one logical stream you
+> can have multiple mpeg subpicture streams. If you create a dvd for a
+> 16:9 movie, you have to specify a spu stream for 4:3 letterboxed display
+> and also for 16:9 widescreen display. Up to this time I have run across
+> only one dvd which did not map the same stream to both modes. So not a
+> frequent case, but until now mplayer could not display the subtitles
+> correctly for these dvds, because it considered logical stream N to map
+> to mpeg stream N. But in this case the mapping is e.g. lang1->{0,1}
+> lang2->{2,3}, so when selecting lang1 mplayer would play lang1 stream
+> for letterbox, and when selecting lang2, it would play lang1 stream for
+> widescreen. The lang2 sub would be totally inaccessible, even with -sid,
+> because the code ignores values higher than the maximum number of subs.
+> 
+> So if you had problems like this, hopefully this will fix it. Patch is
+> against the last CVS snapshot accessible from the webpage (20050806).
+> 
+> Regards,
+> Lehel
+-------------- next part --------------
+Index: dvdread/ifo_print.c
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/ifo_print.c,v
+retrieving revision 1.25
+diff -u -r1.25 ifo_print.c
+--- dvdread/ifo_print.c	15 Sep 2005 16:54:29 -0000	1.25
++++ dvdread/ifo_print.c	18 Jan 2006 23:40:03 -0000
+@@ -793,14 +793,14 @@
+   ifoPrint_USER_OPS(&pgc->prohibited_ops);
+   
+   for(i = 0; i < 8; i++) {
+-    if(pgc->audio_control[i] & 0x8000) { /* The 'is present' bit */
++      if(pgc->audio_control[i].present) {
+       printf("Audio stream %i control: %04x\n", 
+              i, pgc->audio_control[i]);
+     }
+   }
+   
+   for(i = 0; i < 32; i++) {
+-    if(pgc->subp_control[i] & 0x80000000) { /* The 'is present' bit */
++    if(pgc->subp_control[i].present) {
+       printf("Subpicture stream %2i control: %08x\n", 
+              i, pgc->subp_control[i]);
+     }
+Index: dvdread/ifo_read.c
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/ifo_read.c,v
+retrieving revision 1.33
+diff -u -r1.33 ifo_read.c
+--- dvdread/ifo_read.c	19 Sep 2005 13:44:27 -0000	1.33
++++ dvdread/ifo_read.c	18 Jan 2006 23:40:03 -0000
+@@ -751,10 +751,6 @@
+   B2N_16(pgc->cell_playback_offset);
+   B2N_16(pgc->cell_position_offset);
+ 
+-  for(i = 0; i < 8; i++)
+-    B2N_16(pgc->audio_control[i]);
+-  for(i = 0; i < 32; i++)
+-    B2N_32(pgc->subp_control[i]);
+   for(i = 0; i < 16; i++)
+     B2N_32(pgc->palette[i]);
+   
+@@ -763,10 +759,10 @@
+ 
+   /* verify time (look at print_time) */
+   for(i = 0; i < 8; i++)
+-    if(!pgc->audio_control[i] & 0x8000) /* The 'is present' bit */
++    if(!pgc->audio_control[i].present)
+       CHECK_ZERO(pgc->audio_control[i]);
+   for(i = 0; i < 32; i++)
+-    if(!pgc->subp_control[i] & 0x80000000) /* The 'is present' bit */
++    if(!pgc->subp_control[i].present)
+       CHECK_ZERO(pgc->subp_control[i]);
+   
+   /* Check that time is 0:0:0:0 also if nr_of_programs == 0 */
+Index: dvdread/ifo_types.h
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/ifo_types.h,v
+retrieving revision 1.17
+diff -u -r1.17 ifo_types.h
+--- dvdread/ifo_types.h	18 Sep 2005 18:02:08 -0000	1.17
++++ dvdread/ifo_types.h	18 Jan 2006 23:40:03 -0000
+@@ -403,6 +403,55 @@
+ } ATTRIBUTE_PACKED user_ops_t;
+ 
+ /**
++ * Subpicture stream mapping for a subtitle
++ */
++typedef struct {
++#ifdef WORDS_BIGENDIAN
++  unsigned int present   : 1;
++  unsigned int zero1     : 2;
++  unsigned int s_4p3     : 5; /* stream for 4:3 on any display */
++
++  unsigned int zero2     : 3;
++  unsigned int s_wide    : 5; /* stream for 16:9 on widescreen display */
++
++  unsigned int zero3     : 3;
++  unsigned int s_lbox    : 5; /* stream for 16:9 on letterboxed 4:3 display */
++
++  unsigned int zero4     : 3;
++  unsigned int s_panscan : 5; /* stream for 16:9 with pan&scan data on 4:3 display */
++#else
++  unsigned int s_4p3     : 5; /* stream for 4:3 on any display */
++  unsigned int zero1     : 2;
++  unsigned int present   : 1;
++
++  unsigned int s_wide    : 5; /* stream for 16:9 on widescreen display */
++  unsigned int zero2     : 3;
++
++  unsigned int s_lbox    : 5; /* stream for 16:9 on letterboxed 4:3 display */
++  unsigned int zero3     : 3;
++
++  unsigned int s_panscan : 5; /* stream for 16:9 with pan&scan data on 4:3 display */
++  unsigned int zero4     : 3;
++#endif
++} ATTRIBUTE_PACKED subp_mapping_t;
++
++/**
++ * Audio stream mapping for a soundtrack
++ */
++typedef struct {
++#ifdef WORDS_BIGENDIAN
++  unsigned int present : 1;
++  unsigned int zero1   : 4;
++  unsigned int s_audio : 3;
++#else
++  unsigned int s_audio : 3;
++  unsigned int zero1   : 4;
++  unsigned int present : 1;
++#endif
++  uint8_t zero2;
++} ATTRIBUTE_PACKED audio_mapping_t;
++
++/**
+  * Program Chain Information.
+  */
+ typedef struct {
+@@ -411,8 +460,8 @@
+   uint8_t  nr_of_cells;
+   dvd_time_t playback_time;
+   user_ops_t prohibited_ops;
+-  uint16_t audio_control[8]; /* New type? */
+-  uint32_t subp_control[32]; /* New type? */
++  audio_mapping_t audio_control[8];
++  subp_mapping_t subp_control[32];
+   uint16_t next_pgc_nr;
+   uint16_t prev_pgc_nr;
+   uint16_t goup_pgc_nr;
+
+From diego at biurrun.de  Thu Jan 19 00:58:00 2006
+From: diego at biurrun.de (Diego Biurrun)
+Date: Thu Jan 19 00:58:00 2006
+Subject: [Ogle-devel] [PATCH] ASM-optimized byteswap functions
+Message-ID: <20060118235731.GD11287@biurrun.de>
+
+Hi,
+
+this stuff has been sitting in the MPlayer tree forever.
+
+Please review / apply.
+
+Diego
+-------------- next part --------------
+Index: dvdread/bswap.h
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/bswap.h,v
+retrieving revision 1.13
+diff -u -r1.13 bswap.h
+--- dvdread/bswap.h	19 Sep 2005 14:14:34 -0000	1.13
++++ dvdread/bswap.h	18 Jan 2006 23:54:49 -0000
+@@ -76,6 +76,44 @@
+ #define B2N_32(x) x = be32toh(x)
+ #define B2N_64(x) x = be64toh(x)
+ 
++#elif defined(ARCH_X86)
++inline static unsigned short bswap_16(unsigned short x)
++{
++  __asm("xchgb %b0,%h0" :
++        "=q" (x)        :
++        "0" (x));
++    return x;
++}
++#define B2N_16(x) x = bswap_16(x)
++
++inline static unsigned int bswap_32(unsigned int x)
++{
++ __asm(
++#if __CPU__ > 386
++      "bswap   %0":
++      "=r" (x)     :
++#else
++      "xchgb   %b0,%h0\n"
++      " rorl    $16,%0\n"
++      " xchgb   %b0,%h0":
++      "=q" (x)          :
++#endif
++      "0" (x));
++  return x;
++}
++#define B2N_32(x) x = bswap_32(x)
++
++inline static unsigned long long int bswap_64(unsigned long long int x)
++{
++  register union { __extension__ uint64_t __ll;
++          uint32_t __l[2]; } __x;
++  asm("xchgl    %0,%1":
++      "=r"(__x.__l[0]),"=r"(__x.__l[1]):
++      "0"(bswap_32((unsigned long)x)),"1"(bswap_32((unsigned long)(x>>32))));
++  return __x.__ll;
++}
++#define B2N_64(x) x = bswap_64(x)
++
+ /* This is a slow but portable implementation, it has multiple evaluation 
+  * problems so beware.
+  * Old FreeBSD's and Solaris don't have <byteswap.h> or any other such 
+
+From diego at biurrun.de  Fri Jan 20 23:52:00 2006
+From: diego at biurrun.de (Diego Biurrun)
+Date: Fri Jan 20 23:52:00 2006
+Subject: [Ogle-devel] new release status
+Message-ID: <20060120225146.GI6271@biurrun.de>
+
+Hey,
+
+what is the status of the new release that we've been hearing about?
+
+If it's not too pressing I'd ask you to postpone the release a bit more,
+after the two patches I just posted I could fish out a few more bits out
+of our local diff.
+
+Diego
+
+
+From d4bjorn at dtek.chalmers.se  Sat Jan 21 02:31:00 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Sat Jan 21 02:31:00 2006
+Subject: [Ogle-devel] new release status
+In-Reply-To: <20060120225146.GI6271@biurrun.de>
+References: <20060120225146.GI6271@biurrun.de>
+Message-ID: <20060121013035.GA18500@dtek.chalmers.se>
+
+Fri Jan 20 2006, Diego Biurrun wrote:
+> Hey,
+> 
+> what is the status of the new release that we've been hearing about?
+> 
+> If it's not too pressing I'd ask you to postpone the release a bit more,
+> after the two patches I just posted I could fish out a few more bits out
+> of our local diff.
+> 
+
+I was planning on doing the release this weekend...
+
+About your patches:
+The asm patch will probably not go in. Nothing in libdvdread is so
+time critical to need it so I'd rather not have any asm in there.
+
+The audio/subp_control is a bit problematic. 
+At the moment you have access to the data but only as a uint16_t
+that you have to pick out the bits from yourself.
+The patch would mean breaking source compatibility.
+
+An alternative would be to create macros to get at the bits instead,
+but maybe not as nice.
+
+A third alt is to define just the audio/subp_control_t types in the .h file
+and cast the uint16_t to the new types when you want to use the
+bitfields.
+
+Or make a #define before including dvdread.h with something like
+#define DVDREAD_NEW_CONTROL_INTERFACE if you want the new bitfields,
+this alternative is probably just ugly.
+
+
+Any comments on this. Is it worth breaking source compatibility for
+just these bitfields in this release?
+
+Are you sure the control/mapping field should always be decoded the
+same way so we don't have to change the bitfields later on?
+Using macros would help in that case.
+
+
+/Bj|rn
+
+
+
+
+
+From d4bjorn at dtek.chalmers.se  Mon Jan 23 01:04:03 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Mon Jan 23 01:04:03 2006
+Subject: [Ogle-devel] RELEASE libdvdread-0.9.5
+Message-ID: <20060123000138.GA20224@dtek.chalmers.se>
+
+libdvdread-0.9.5 is released
+
+http://www.dtek.chalmers.se/~dvd/dist/libdvdread-0.9.5.tar.gz
+
+(see http://www.dtek.chalmers.se/~dvd for rpms for redhat-8.x)
+
+
+Bug fixes.
+Better error handling / error messages.
+Some support for multithreaded apps.
+Potential memory leak fixes.
+...
+
+/Bj|rn
+
+
+
+From coyote at cojot.name  Mon Jan 23 12:44:00 2006
+From: coyote at cojot.name (coyote at cojot.name)
+Date: Mon Jan 23 12:44:00 2006
+Subject: [Ogle-devel] RELEASE libdvdread-0.9.5
+Message-ID: <Pine.LNX.4.63.0601231242260.7023@thorbardin.lasthome.solace.krynn>
+
+On Mon, 23 Jan 2006, Bj|rn Englund wrote:
+
+> libdvdread-0.9.5 is released
+> 
+> http://www.dtek.chalmers.se/~dvd/dist/libdvdread-0.9.5.tar.gz
+> 
+> (see http://www.dtek.chalmers.se/~dvd for rpms for redhat-8.x)
+> 
+> 
+> Bug fixes.
+> Better error handling / error messages.
+> Some support for multithreaded apps.
+> Potential memory leak fixes.
+> ...
+> 
+> /Bj|rn
+
+Compiles fine here (Solaris 10 U1/sparc, Sun Studio 11.0).. I'll test it 
+tonight.
+
+Thanks Bjorn! :)
+
+-- 
+,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,
+Vincent S. Cojot, Computer Engineering. STEP project. _.,-*~'`^`'~*-,._.,-*~
+Ecole Polytechnique de Montreal, Comite Micro-Informatique. _.,-*~'`^`'~*-,.
+Linux Xview/OpenLook resources page _.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'
+http://step.polymtl.ca/~coyote  _.,-*~'`^`'~*-,._ coyote at NOSPAM4cojot.name
+
+They cannot scare me with their empty spaces
+Between stars - on stars where no human race is
+I have it in me so much nearer home
+To scare myself with my own desert places.       - Robert Frost
+
+
+
+
+From vtorri at univ-evry.fr  Mon Jan 23 14:08:00 2006
+From: vtorri at univ-evry.fr (Vincent Torri)
+Date: Mon Jan 23 14:08:00 2006
+Subject: [Ogle-devel] RELEASE libdvdread-0.9.5
+In-Reply-To: <20060123000138.GA20224@dtek.chalmers.se>
+Message-ID: <Pine.LNX.4.44.0601231449240.14919-100000@grozny>
+
+hello,
+
+is it possible to have an updated ChangeLog ?
+
+Vincent Torri
+
+On Mon, 23 Jan 2006, Bj|rn Englund wrote:
+
+> libdvdread-0.9.5 is released
+> 
+> http://www.dtek.chalmers.se/~dvd/dist/libdvdread-0.9.5.tar.gz
+> 
+> (see http://www.dtek.chalmers.se/~dvd for rpms for redhat-8.x)
+> 
+> 
+> Bug fixes.
+> Better error handling / error messages.
+> Some support for multithreaded apps.
+> Potential memory leak fixes.
+> ...
+> 
+> /Bj|rn
+> 
+> _______________________________________________
+> Ogle-devel mailing list
+> Ogle-devel at lists.berlios.de
+> http://lists.berlios.de/mailman/listinfo/ogle-devel
+> 
+
+
+
+From d4bjorn at dtek.chalmers.se  Mon Jan 23 20:28:00 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Mon Jan 23 20:28:00 2006
+Subject: [Ogle-devel] RELEASE libdvdread-0.9.5
+In-Reply-To: <Pine.LNX.4.44.0601231449240.14919-100000@grozny>
+References: <20060123000138.GA20224@dtek.chalmers.se> <Pine.LNX.4.44.0601231449240.14919-100000@grozny>
+Message-ID: <20060123192713.GA4763@dtek.chalmers.se>
+
+Mon Jan 23 2006, Vincent Torri wrote:
+> 
+> hello,
+> 
+> is it possible to have an updated ChangeLog ?
+> 
+
+Ok, here it is.
+http://www.dtek.chalmers.se/groups/dvd/libdvdread_0_9_5.shtml
+
+/Bj|rn
+
+
+From laurent at elanor.org  Tue Jan 24 22:46:00 2006
+From: laurent at elanor.org (Laurent Blume)
+Date: Tue Jan 24 22:46:00 2006
+Subject: [Ogle-devel] RELEASE libdvdread-0.9.5
+In-Reply-To: <Pine.LNX.4.63.0601231242260.7023@thorbardin.lasthome.solace.krynn>
+References: <Pine.LNX.4.63.0601231242260.7023@thorbardin.lasthome.solace.krynn>
+Message-ID: <43D69FFA.6070802@elanor.org>
+
+coyote at cojot.name wrote:
+> Compiles fine here (Solaris 10 U1/sparc, Sun Studio 11.0).. I'll test it 
+> tonight.
+> 
+> Thanks Bjorn! :)
+
+It does work, on Solaris 10 U1 x86, Studio 11.
+Built in 32 bit only so far.
+
+And the slowness problem I was having with Ogle seems to have 
+disappeared... Good!
+
+Laurent
+-- 
+A hundred thousand lemmings can't be wrong!
+
+
+From diego at biurrun.de  Wed Jan 25 10:41:00 2006
+From: diego at biurrun.de (Diego Biurrun)
+Date: Wed Jan 25 10:41:00 2006
+Subject: [Ogle-devel] new release status
+In-Reply-To: <20060121013035.GA18500@dtek.chalmers.se>
+References: <20060120225146.GI6271@biurrun.de> <20060121013035.GA18500@dtek.chalmers.se>
+Message-ID: <20060125094001.GC9127@biurrun.de>
+
+On Sat, Jan 21, 2006 at 02:30:35AM +0100, Bj|rn Englund wrote:
+> 
+> About your patches:
+> The asm patch will probably not go in. Nothing in libdvdread is so
+> time critical to need it so I'd rather not have any asm in there.
+
+Maybe this is worth benchmarking.  Byteswapping can happen quite often.
+I don't see a bit of ASM as a problem, it's just a few lines...
+
+> The audio/subp_control is a bit problematic. 
+> At the moment you have access to the data but only as a uint16_t
+> that you have to pick out the bits from yourself.
+> The patch would mean breaking source compatibility.
+> 
+> An alternative would be to create macros to get at the bits instead,
+> but maybe not as nice.
+> 
+> A third alt is to define just the audio/subp_control_t types in the .h file
+> and cast the uint16_t to the new types when you want to use the
+> bitfields.
+> 
+> Or make a #define before including dvdread.h with something like
+> #define DVDREAD_NEW_CONTROL_INTERFACE if you want the new bitfields,
+> this alternative is probably just ugly.
+
+The comments in the source indicate that a new type was desirable, now
+you have it...
+
+> Any comments on this. Is it worth breaking source compatibility for
+> just these bitfields in this release?
+
+What about the next release? :)
+
+> Are you sure the control/mapping field should always be decoded the
+> same way so we don't have to change the bitfields later on?
+> Using macros would help in that case.
+
+No, it's not my patch.  Shall I try contacting the patch sender?
+
+Diego
+
+
+From lehel at pmc-services.hu  Wed Jan 25 13:23:03 2006
+From: lehel at pmc-services.hu (Lehel Bernadt)
+Date: Wed Jan 25 13:23:03 2006
+Subject: [Ogle-devel] new release status
+In-Reply-To: <20060125094001.GC9127@biurrun.de>
+References: <20060120225146.GI6271@biurrun.de> <20060121013035.GA18500@dtek.chalmers.se> <20060125094001.GC9127@biurrun.de>
+Message-ID: <200601251321.35365.lehel@pmc-services.hu>
+
+On Wednesday 25 January 2006 10:40, Diego Biurrun wrote:
+>
+> > Any comments on this. Is it worth breaking source compatibility for
+> > just these bitfields in this release?
+>
+> What about the next release? :)
+>
+> > Are you sure the control/mapping field should always be decoded the
+> > same way so we don't have to change the bitfields later on?
+> > Using macros would help in that case.
+>
+> No, it's not my patch.  Shall I try contacting the patch sender?
+
+You don't have to, I'm on the list :)
+
+And yes, this is a fixed structure, there should be no worries about that.
+
+At worst it can be included in the next major release (1.0?), then it 
+wouldn't be a problem breaking source compatibility.
+
+Lehel
+
+

@@ -1,0 +1,40 @@
+From sed.nivo at gmail.com  Wed Oct 15 14:16:05 2008
+From: sed.nivo at gmail.com (sed.nivo at gmail.com)
+Date: Wed, 15 Oct 2008 15:16:05 +0300
+Subject: [Ogle-devel] parental manegment information table masks
+In-Reply-To: <1841a3c10810150507q7a0f53c3o1abceed5a5e21920@mail.gmail.com>
+References: <1841a3c10810150507q7a0f53c3o1abceed5a5e21920@mail.gmail.com>
+Message-ID: <1841a3c10810150516p154e5cc5m94bd1dd2d5f21bc@mail.gmail.com>
+
+Hi people,
+
+Could you help me with libdvdread. I'm working on parental control
+feature. I dumped dvd with ifo_dump and got the following table.
+I don't understand the meaning of masks for specific title and level.
+Kindly please help me.
+
+Parental Manegment Information table
+------------------------------------
+Number of Countries: 2
+Number of VTSs: 5
+Last byte: 215
+Start byte: 24
+Parental Masks for country: US
+VMG    0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  1 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  2 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  3 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  4 0: 0001  1: 0001  2: 0001  3: 0001  4: 0001  5: 0001  6: 0001  7: 0001
+VTS  5 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+Start byte: 120
+Parental Masks for country: JP
+VMG    0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  1 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  2 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  3 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+VTS  4 0: 0001  1: 0001  2: 0001  3: 0001  4: 0001  5: 0001  6: 0001  7: 0001
+VTS  5 0: 0001  1: 0002  2: 0004  3: 0008  4: 0010  5: 0020  6: 0040  7: 0080
+
+Regards,
+
+

@@ -1,0 +1,33 @@
+From d4bjorn at dtek.chalmers.se  Wed Feb  1 13:58:01 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Wed Feb  1 13:58:01 2006
+Subject: [Ogle-devel] new release status / new dvd formats
+In-Reply-To: <200601251321.35365.lehel@pmc-services.hu>
+References: <20060120225146.GI6271@biurrun.de> <20060121013035.GA18500@dtek.chalmers.se> <20060125094001.GC9127@biurrun.de> <200601251321.35365.lehel@pmc-services.hu>
+Message-ID: <20060201125739.GB641@dtek.chalmers.se>
+
+Wed Jan 25 2006, Lehel Bernadt wrote:
+
+> You don't have to, I'm on the list :)
+> 
+> And yes, this is a fixed structure, there should be no worries about that.
+> 
+> At worst it can be included in the next major release (1.0?), then it 
+> wouldn't be a problem breaking source compatibility.
+> 
+Yes, this would be the easiest thing to do I think.
+About v1.0...
+Anyone have any info on the differences in dvd structures in 
+DVD-VR, DVD+VR, DVD+RW video formats compared to DVD-Video
+and should support for them (if the info is available) be included
+before v1.0 ?
+
+I haven't looked to deeply into this, but as I understand there are
+some compatability problems when reading dvd+/-r(w) discs made
+in standalone dvd recorders (especially if the disc sessions haven't been
+closed / finalized).
+
+/Bj|rn
+
+
+

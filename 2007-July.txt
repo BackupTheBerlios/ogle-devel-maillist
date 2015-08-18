@@ -1,0 +1,55 @@
+From nsabbi at email.it  Sun Jul 29 19:43:35 2007
+From: nsabbi at email.it (Nico Sabbi)
+Date: Sun, 29 Jul 2007 19:43:35 +0200
+Subject: [Ogle-devel] Nasty regression in dvdread since removal of getbits()
+	in nav_read.c
+Message-ID: <46ACD1C7.3080408@email.it>
+
+Hi,
+since nav_read.c was changed to use conditional bitfields rather than 
+calls to getbits()
+that file is completely broken: the C standard doesn't guarantee how 
+bitfields should
+be laid out in memory (and additionally to me those 2 different layout 
+-e.g. in btni_t-
+seem to be defined incorrectly) making this "feature" too much dipendent 
+on the
+compiler and endiannes used.
+
+The result is that the navigation is completely broken, as you
+can verify yourself when compiling my fork of dvdnav against dvdread 
+0.9.4+.
+(svn co svn://dvdnav.mplayerhq.hu/dvdnav )
+
+May I ask you why you did it ? :-)     
+saving code is nice, but not at the cost of correctness.
+Can you please revert that change and restore the original code?
+
+Moreover, where can I access the cvs of dvdread? I need to keep
+track of the single changes.
+
+Thanks a lot,
+    Nico
+
+
+From diego at biurrun.de  Mon Jul 30 11:23:15 2007
+From: diego at biurrun.de (Diego Biurrun)
+Date: Mon, 30 Jul 2007 11:23:15 +0200
+Subject: [Ogle-devel] Nasty regression in dvdread since removal
+	of	getbits() in nav_read.c
+In-Reply-To: <46ACD1C7.3080408@email.it>
+References: <46ACD1C7.3080408@email.it>
+Message-ID: <20070730092315.GH2249@biurrun.de>
+
+On Sun, Jul 29, 2007 at 07:43:35PM +0200, Nico Sabbi wrote:
+> 
+> Moreover, where can I access the cvs of dvdread? I need to keep
+> track of the single changes.
+
+Look at Ogle's development page:
+
+http://www.dtek.chalmers.se/groups/dvd/development.shtml
+
+Diego
+
+

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] new release status
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20new%20release%20status&In-Reply-To=%3C20060121013035.GA18500%40dtek.chalmers.se%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000005.html">
+   <LINK REL="Next"  HREF="000012.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] new release status</H1>
+    <B>Bj|rn Englund</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20new%20release%20status&In-Reply-To=%3C20060121013035.GA18500%40dtek.chalmers.se%3E"
+       TITLE="[Ogle-devel] new release status">d4bjorn at dtek.chalmers.se
+       </A><BR>
+    <I>Sat Jan 21 02:31:00 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000005.html">[Ogle-devel] new release status
+</A></li>
+        <LI>Next message: <A HREF="000012.html">[Ogle-devel] new release status
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#6">[ date ]</a>
+              <a href="thread.html#6">[ thread ]</a>
+              <a href="subject.html#6">[ subject ]</a>
+              <a href="author.html#6">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Fri Jan 20 2006, Diego Biurrun wrote:
+&gt;<i> Hey,
+</I>&gt;<i> 
+</I>&gt;<i> what is the status of the new release that we've been hearing about?
+</I>&gt;<i> 
+</I>&gt;<i> If it's not too pressing I'd ask you to postpone the release a bit more,
+</I>&gt;<i> after the two patches I just posted I could fish out a few more bits out
+</I>&gt;<i> of our local diff.
+</I>&gt;<i> 
+</I>
+I was planning on doing the release this weekend...
+
+About your patches:
+The asm patch will probably not go in. Nothing in libdvdread is so
+time critical to need it so I'd rather not have any asm in there.
+
+The audio/subp_control is a bit problematic. 
+At the moment you have access to the data but only as a uint16_t
+that you have to pick out the bits from yourself.
+The patch would mean breaking source compatibility.
+
+An alternative would be to create macros to get at the bits instead,
+but maybe not as nice.
+
+A third alt is to define just the audio/subp_control_t types in the .h file
+and cast the uint16_t to the new types when you want to use the
+bitfields.
+
+Or make a #define before including dvdread.h with something like
+#define DVDREAD_NEW_CONTROL_INTERFACE if you want the new bitfields,
+this alternative is probably just ugly.
+
+
+Any comments on this. Is it worth breaking source compatibility for
+just these bitfields in this release?
+
+Are you sure the control/mapping field should always be decoded the
+same way so we don't have to change the bitfields later on?
+Using macros would help in that case.
+
+
+/Bj|rn
+
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000005.html">[Ogle-devel] new release status
+</A></li>
+	<LI>Next message: <A HREF="000012.html">[Ogle-devel] new release status
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#6">[ date ]</a>
+              <a href="thread.html#6">[ thread ]</a>
+              <a href="subject.html#6">[ subject ]</a>
+              <a href="author.html#6">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

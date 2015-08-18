@@ -1,0 +1,260 @@
+From alanpae at ilkda.com  Thu Sep 25 23:02:02 2008
+From: alanpae at ilkda.com (Alan Pae)
+Date: Thu, 25 Sep 2008 14:02:02 -0700
+Subject: [Ogle-devel] Build error
+Message-ID: <48DBFC4A.60604@ilkda.com>
+
+Any ideas?
+
+Thanks in advance,
+alan
+
+gcc -fomit-frame-pointer -funroll-loops -I/opt/local/include 
+-I/opt/gnu/include -O3 -Wall -I/opt/local/include -I/opt/gnu/include -O3 
+-Wall -march=i586 -mcpu=pentiumpro -o .libs/ogle_mpeg_vs video_stream.o 
+video_mpeg1.o video_mpeg2.o video_motion.o c_getbits.o video_tables.o 
+yuv2rgb_mlib.o  -L/opt/local/lib -L/opt/SUNWmlib/lib -lmlib 
+../common/libcommon.a ../ogle/.libs/libmsgevents.so -Wl,--rpath 
+-Wl,/opt/ogle/lib/ogle -Wl,--rpath -Wl,/opt/local/lib -Wl,--rpath 
+-Wl,/opt/gnu/lib -Wl,--rpath -Wl,/opt/SUNWmlib/lib
+video_stream.o: In function `get_output_buffer':
+video_stream.c:(.text+0x40c5): undefined reference to `emms'
+video_stream.o: In function `picture_data':
+video_stream.c:(.text+0x487c): undefined reference to `emms'
+collect2: ld returned 1 exit status
+*** Error code 1
+make: Fatal error: Command failed for target `ogle_mpeg_vs'
+Current working directory /build/ogle-0.9.2/mpeg2_video
+*** Error code 1
+The following command caused the error:
+set fnord $MAKEFLAGS; amf=$2; \
+dot_seen=no; \
+target=`echo all-recursive | sed s/-recursive//`; \
+list='ogle  include  common  ctrl  mpeg2_video  mpeg2_program  libogleao 
+  ac3  vmg  dvd_cli  scripts  doc'; for subdir in $list; do \
+   echo "Making $target in $subdir"; \
+   if test "$subdir" = "."; then \
+     dot_seen=yes; \
+     local_target="$target-am"; \
+   else \
+     local_target="$target"; \
+   fi; \
+   (cd $subdir && make  $local_target) \
+    || case "$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+done; \
+if test "$dot_seen" = "no"; then \
+   make  "$target-am" || exit 1; \
+fi; test -z "$fail"
+make: Fatal error: Command failed for target `all-recursive'
+
+
+From lundman at lundman.net  Fri Sep 26 02:08:37 2008
+From: lundman at lundman.net (Jorgen Lundman)
+Date: Fri, 26 Sep 2008 09:08:37 +0900
+Subject: [Ogle-devel] libdvdread UDF2.5
+In-Reply-To: <485C8651.2070707@lundman.net>
+References: <485C8651.2070707@lundman.net>
+Message-ID: <48DC2805.2070704@lundman.net>
+
+
+Just a quick note to say it has been done, should anyone else seek what 
+I was after.
+
+http://lists.mplayerhq.hu/pipermail/dvdnav-discuss/2008-September/000789.html
+
+Lund
+
+
+lundman wrote:
+> I realise this list has been rather dead lately, but maybe there are a 
+> few lurkers out there who might be interested in helping.
+> 
+> I was looking at the possibility to get libdvdread to read the new 
+> fangled BD5 .ISO files, which mostly are just UDF2.50 (at a guess). In 
+> my example, I called the ISO file "highlander.iso".
+> 
+> If I step through the code attempting to open an ISO file, I get the 
+> following happen:
+> 
+> 
+> (gdb)
+> #0  UDFFindFile (device=0x409170, filename=0x2f378 "/", filesize=0x0) at 
+> dvd_udf.c:979
+> #1  0x00026f8d in DVDOpenImageFile (location=0x409560 
+> "highlander-bd5.iso", have_css=0) at dvd_reader.c:333
+> #2  0x000272fd in DVDOpen (path=0x409200 "highlander-bd5.iso") at 
+> dvd_reader.c:488
+> 
+> 
+>    /* sanity check, is it a valid UDF image, can we find the root dir */
+>    if(!UDFFindFile(dvd, "/", NULL)) {
+> 
+> 
+> #0  UDFFindFile (device=0x409170, filename=0x2f378 "/", filesize=0x0) at 
+> dvd_udf.c:979
+> (gdb) n
+> 982       tokenline[0] = '\0';
+> (gdb) n
+> 983       strcat( tokenline, filename );
+> (gdb) n
+> 986       if(!(GetUDFCache(device, PartitionCache, 0, &partition) &&
+> (gdb) n
+> 989         if( !UDFFindPartition( device, 0, &partition ) ) {
+> (gdb) n
+> 992         SetUDFCache(device, PartitionCache, 0, &partition);
+> (gdb) p partition
+> $2 = {
+>    valid = 1,
+>    VolumeDesc = "HIGHLANDER", '\0' <repeats 54 times>, 
+> "\003\000\000\000?@\000P?@ 
+>  
+> @\000H???\000\000\000\000\000\000?\001\b\000\003\000\000\000\000\000]Y\001?\004\0 
+>  
+>   000\000\000>?\002\000H????&\000?\000\000\000\000?h\002\000X???",
+>    Flags = 1,
+>    Number = 0,
+>    Contents = "\000+NSR03", '\0' <repeats 24 times>,
+>    AccessType = 4232544,
+>    Start = 288,
+>    Length = 2291200
+> }
+> (gdb)
+> 994         LogBlock = dvdalign_lbmalloc(device, 1);
+> (gdb)
+> 995         if(!LogBlock) {
+> 
+> 
+> 
+> 
+> 
+> (gdb) n
+> 999         lbnum = partition.Start;
+> (gdb)
+> 1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+> (gdb)
+> 1004            UDFDescriptor( LogBlock, &TagID );
+> (gdb)
+> 1007          printf("TagID %d\n", TagID);
+> (gdb)
+> TagID 266
+> 1009          if( TagID == 256 ) {  // File Set Descriptor
+> (gdb)
+> 1014                 && ( TagID != 8 ) && ( TagID != 256 ) );
+> (gdb)
+> 1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+> (gdb)
+> 1004            UDFDescriptor( LogBlock, &TagID );
+> (gdb)
+> 1007          printf("TagID %d\n", TagID);
+> (gdb)
+> TagID 0
+> 1009          if( TagID == 256 ) {  // File Set Descriptor
+> (gdb)
+> 1014                 && ( TagID != 8 ) && ( TagID != 256 ) );
+> (gdb)
+> 1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+> (gdb)
+> 1004            UDFDescriptor( LogBlock, &TagID );
+> (gdb)
+> 1007          printf("TagID %d\n", TagID);
+> (gdb)
+> TagID 0
+> 
+> [snip] It reads TagID=0 for about 32 blocks.
+> 
+> 
+> 
+> 1004            UDFDescriptor( LogBlock, &TagID );
+> (gdb)
+> 1007          printf("TagID %d\n", TagID);
+> (gdb)
+> TagID 256
+> 1009          if( TagID == 256 ) {  // File Set Descriptor
+> (gdb) p lbnum
+> $3 = 321
+> 1010            UDFLongAD( &LogBlock[ 400 ], &RootICB );
+> (gdb)
+> 1014                 && ( TagID != 8 ) && ( TagID != 256 ) );
+> (gdb) p RootICB
+> $4 = {
+>    Location = 2,
+>    Length = 2048,
+>    Flags = 0 '\0',
+>    Partition = 1
+> }
+> 
+> (gdb) n
+> 1016        dvdalign_lbfree(device, LogBlock);
+> (gdb) n
+> 1019        if( TagID != 256 ) {
+> (gdb) n
+> 1022        if( RootICB.Partition != 0 ) {
+> (gdb) n
+> 1023          printf("RootICB.Partition %d.\n", RootICB.Partition);
+> 
+> 
+> This is the first place we would error out, as our Partition is "1" and 
+> not the expected "0". If we ignore it:
+> 
+> 
+> (gdb) n
+> 1028        SetUDFCache(device, RootICBCache, 0, &RootICB);
+> (gdb) n
+> 1032      if( !UDFMapICB( device, RootICB, &filetype, &partition, &File 
+> ) ) {
+> (gdb) s
+> UDFMapICB (device=0x409170, ICB={Location = 2, Length = 2048, Flags = 0 
+> '\0', Partition = 1}, FileType=0xbfffe483 "\004/", partition=0xbfffeca8, 
+> File=0xbfffec90) at dvd_udf.c:660
+> 660       lbnum = partition->Start + ICB.Location;
+> (gdb) p lbnum
+> $5 = 4234400
+> 
+> 
+> (gdb) n
+> 661       tmpmap.lbn = lbnum;
+> (gdb) n
+> 662       if(GetUDFCache(device, MapCache, lbnum, &tmpmap)) {
+> (gdb) n
+> 668       LogBlock = dvdalign_lbmalloc(device, 1);
+> (gdb) n
+> 669       if(!LogBlock) {
+> (gdb) n
+> 674         if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) <= 0 ) {
+> (gdb) n
+> 677           UDFDescriptor( LogBlock, &TagID );
+> (gdb) n
+> 680         printf(" TagID %d\n", TagID);
+> (gdb) n
+>   TagID 0
+> 682         if( TagID == 261 ) {
+> (gdb) n
+> 691                  / DVD_VIDEO_LB_LEN ) && ( TagID != 261 ) );
+> (gdb) n
+> 693       dvdalign_lbfree(device, LogBlock);
+> (gdb) n
+> 694       return 0;
+> 
+> And this is the next place we fail. It wants TagID 261, but gets 0. it 
+> only tries for 1 block. If I make the while() continue until we get a 
+> 261, it takes about 300 blocks, and then the filetype is wastly 
+> different to "4".
+> 
+> 
+> Anyone have a rough idea at the size of the task to support 2.50/2.60?
+> 
+> 
+> Lund
+> 
+> _______________________________________________
+> Ogle-devel mailing list
+> Ogle-devel at lists.berlios.de
+> https://lists.berlios.de/mailman/listinfo/ogle-devel
+
+-- 
+Jorgen Lundman       | <lundman at lundman.net>
+Unix Administrator   | +81 (0)3 -5456-2687 ext 1017 (work)
+Shibuya-ku, Tokyo    | +81 (0)90-5578-8500          (cell)
+Japan                | +81 (0)3 -3375-1767          (home)
+
+

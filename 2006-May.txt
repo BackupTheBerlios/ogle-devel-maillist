@@ -1,0 +1,189 @@
+From d4bjorn at dtek.chalmers.se  Wed May  3 14:42:01 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Wed May  3 14:42:01 2006
+Subject: [Ogle-devel] Release libdvdread-0.9.6
+Message-ID: <20060503124132.GA5149@dtek.chalmers.se>
+
+libdvdread-0.9.6 is released
+See http://www.dtek.chalmers.se/~dvd
+http://www.dtek.chalmers.se/~dvd/dist/libdvdread-0.9.6.tar.gz
+
+/Bj|rn
+
+
+From diego at biurrun.de  Wed May  3 15:18:03 2006
+From: diego at biurrun.de (Diego Biurrun)
+Date: Wed May  3 15:18:03 2006
+Subject: [Ogle-devel] Release libdvdread-0.9.6
+In-Reply-To: <20060503124132.GA5149@dtek.chalmers.se>
+References: <20060503124132.GA5149@dtek.chalmers.se>
+Message-ID: <20060503131730.GF3925@biurrun.de>
+
+On Wed, May 03, 2006 at 02:41:32PM +0200, Bj|rn Englund wrote:
+> libdvdread-0.9.6 is released
+> See http://www.dtek.chalmers.se/~dvd
+> http://www.dtek.chalmers.se/~dvd/dist/libdvdread-0.9.6.tar.gz
+
+Do you have a changelog online?
+
+Diego
+
+
+From d4bjorn at dtek.chalmers.se  Wed May  3 17:18:01 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Wed May  3 17:18:01 2006
+Subject: [Ogle-devel] Release libdvdread-0.9.6
+In-Reply-To: <20060503131730.GF3925@biurrun.de>
+References: <20060503124132.GA5149@dtek.chalmers.se> <20060503131730.GF3925@biurrun.de>
+Message-ID: <20060503151823.GA8635@dtek.chalmers.se>
+
+Wed May 03 2006, Diego Biurrun wrote:
+> On Wed, May 03, 2006 at 02:41:32PM +0200, Bj|rn Englund wrote:
+> > libdvdread-0.9.6 is released
+> > See http://www.dtek.chalmers.se/~dvd
+> > http://www.dtek.chalmers.se/~dvd/dist/libdvdread-0.9.6.tar.gz
+> 
+> Do you have a changelog online?
+> 
+Only:
+http://www.dtek.chalmers.se/groups/dvd/news.shtml
+
+This release has some minor bugfixes/changes that mostly affect
+FreeBSD/Dragonfly and the addition of the DVDFileStat() call.
+
+Don't add a prefix to device names on Dragonfly and FreeBSD anymore.
+Fixed a missing attribute packed for app_info in audio_attr_t, which
+caused problems on arm I think.
+
+/Bj|rn
+
+
+
+From russ.turner at cox.net  Mon May  8 18:43:01 2006
+From: russ.turner at cox.net (Russ Turner)
+Date: Mon May  8 18:43:01 2006
+Subject: [Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+Message-ID: <445F7514.7070704@cox.net>
+
+I am writing an application that will automatically and reliably (!)
+determine the title of a commercial DVD.  Some DVD's provide enough
+information in a separate disc.id file, but others do not.  The
+"Provider ID:" field in VIDEO_TS.IFO sometimes has helpful data.  But
+in other cases, while there is useful information in the VIDEO_TS.IFO 
+file, it is not in "Provider ID" or the other data that is defined in 
+ifo_types.h and reported by libdvdread (ifo_dump).  The Sony movie 
+"Radio" is an example of such a DVD.  The name of the movie and the 
+studio can befound in VIDEO_TS.IFO with grep or cat, but is not reported 
+by libdvdread.
+
+Are there additional IFO types that I can add to the header file and the
+libdvdread programs that will capture this additional IFO information?
+
+Russ
+
+
+
+
+
+From d4bjorn at dtek.chalmers.se  Tue May  9 12:41:02 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Tue May  9 12:41:02 2006
+Subject: [Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+In-Reply-To: <445F7514.7070704@cox.net>
+References: <445F7514.7070704@cox.net>
+Message-ID: <20060508213204.GB17898@dtek.chalmers.se>
+
+Mon May 08 2006, Russ Turner wrote:
+> I am writing an application that will automatically and reliably (!)
+> determine the title of a commercial DVD.  Some DVD's provide enough
+> information in a separate disc.id file, but others do not.  The
+> "Provider ID:" field in VIDEO_TS.IFO sometimes has helpful data.  But
+> in other cases, while there is useful information in the VIDEO_TS.IFO 
+> file, it is not in "Provider ID" or the other data that is defined in 
+> ifo_types.h and reported by libdvdread (ifo_dump).  The Sony movie 
+> "Radio" is an example of such a DVD.  The name of the movie and the 
+> studio can befound in VIDEO_TS.IFO with grep or cat, but is not reported 
+> by libdvdread.
+> 
+> Are there additional IFO types that I can add to the header file and the
+> libdvdread programs that will capture this additional IFO information?
+> 
+
+Yes, if you get the title name when doing a grep on the .IFO file the
+dvd probably implements Text Data. This is not completely implemented
+in libdvdread. There were very few dvds with text data before so we didn't
+have anything to test with. I haven't checked lately if more dvds are using
+it.
+
+There will be many dvds where you won't be able to extract the title name
+automatically from. Are you going to add those titles in a separate database
+or just ignore them?
+If you are planning to use a separate db you should
+use the disc_id function in libdvdread to identify the dvd.
+It md5sums the first 10 ifo files on a disc.
+Although this won't guarantee the disc_id to be 100% unique I haven't
+seen any discs where it fails, and it works if you have copies of the
+dvd files on hd as well, unlike approaches where info from the udf/iso
+filesystem on the dvd is used. Of course you could use a combination of both.
+
+/Bj|rn
+
+
+From russ.turner at cox.net  Wed May 10 10:40:52 2006
+From: russ.turner at cox.net (Russ Turner)
+Date: Wed May 10 10:40:52 2006
+Subject: [Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+In-Reply-To: <20060508213204.GB17898@dtek.chalmers.se>
+References: <445F7514.7070704@cox.net> <20060508213204.GB17898@dtek.chalmers.se>
+Message-ID: <4460F441.9010101@cox.net>
+
+Thank you for the information.  I will look at adding the libdvdread 
+disk_id function to my approach.
+
+Russ
+
+Bj|rn Englund wrote:
+> Mon May 08 2006, Russ Turner wrote:
+> 
+>>I am writing an application that will automatically and reliably (!)
+>>determine the title of a commercial DVD.  Some DVD's provide enough
+>>information in a separate disc.id file, but others do not.  The
+>>"Provider ID:" field in VIDEO_TS.IFO sometimes has helpful data.  But
+>>in other cases, while there is useful information in the VIDEO_TS.IFO 
+>>file, it is not in "Provider ID" or the other data that is defined in 
+>>ifo_types.h and reported by libdvdread (ifo_dump).  The Sony movie 
+>>"Radio" is an example of such a DVD.  The name of the movie and the 
+>>studio can befound in VIDEO_TS.IFO with grep or cat, but is not reported 
+>>by libdvdread.
+>>
+>>Are there additional IFO types that I can add to the header file and the
+>>libdvdread programs that will capture this additional IFO information?
+>>
+> 
+> 
+> Yes, if you get the title name when doing a grep on the .IFO file the
+> dvd probably implements Text Data. This is not completely implemented
+> in libdvdread. There were very few dvds with text data before so we didn't
+> have anything to test with. I haven't checked lately if more dvds are using
+> it.
+> 
+> There will be many dvds where you won't be able to extract the title name
+> automatically from. Are you going to add those titles in a separate database
+> or just ignore them?
+> If you are planning to use a separate db you should
+> use the disc_id function in libdvdread to identify the dvd.
+> It md5sums the first 10 ifo files on a disc.
+> Although this won't guarantee the disc_id to be 100% unique I haven't
+> seen any discs where it fails, and it works if you have copies of the
+> dvd files on hd as well, unlike approaches where info from the udf/iso
+> filesystem on the dvd is used. Of course you could use a combination of both.
+> 
+> /Bj|rn
+> _______________________________________________
+> Ogle-devel mailing list
+> Ogle-devel at lists.berlios.de
+> http://lists.berlios.de/mailman/listinfo/ogle-devel
+> 
+
+
+

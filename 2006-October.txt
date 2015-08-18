@@ -1,0 +1,99 @@
+From d4bjorn at dtek.chalmers.se  Fri Oct  6 11:19:58 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Fri, 6 Oct 2006 11:19:58 +0200
+Subject: [Ogle-devel] libdvdread-0.9.7 released (bugfix only)
+Message-ID: <20061006091958.GA17087@dtek.chalmers.se>
+
+There was an erroneous free in the DVDClose function that
+triggered a segfault in case more than one DVDClose was called (after
+calling more than one DVDOpen.
+This is fixed in the new 0.9.7 release of libdvdread.
+tarball at:
+www.dtek.chalmers.se/~dvd/dist/libdvdread-0.9.7.tar.gz
+rpms:
+www.dtek.chalmers.se/~dvd/redhat.shtml
+
+
+/Bj|rn
+
+
+From vtorri at univ-evry.fr  Thu Oct 26 19:40:10 2006
+From: vtorri at univ-evry.fr (Vincent Torri)
+Date: Thu, 26 Oct 2006 19:40:10 +0200 (CEST)
+Subject: [Ogle-devel] strange behavior of DVDFileStat
+Message-ID: <Pine.LNX.4.64.0610261929530.30827@grozny.maths.univ-evry.fr>
+
+
+Hello,
+
+I'm writing a small gtk gui that try to list the content of a DVD. I use 
+the filestat.c code for that part. With a DVDROM, file stat returns:
+
+VIDEO_TS.IFO: size: 12288
+VIDEO_TS.VOB: size: 165888
+VIDEO_TS.BUP: size: 12288
+VTS_01_0.IFO: size: 94208
+VTS_01_0.VOB: size: 420061184
+VTS_01_[1-9].VOB: size: 7239475200, [1073489920], [1073442816], 
+[1073612800], [1073672192], [1073225728], [1073483776], [798547968]
+VTS_01_0.BUP: size: 94208
+
+which is perfect. But with my gui, everything is good, except when I try 
+to get the stats of the DVD_READ_TITLE_VOBS domain. I get:
+
+for the size: 2944507904 (should be 7239475200)
+for the number of titles: 1 (should be 7)
+
+I don't undersand at all, as I mimic the filestat code. Sometimes the 
+program seg fault (gdb is of no help, as it returns no useful 
+informations, even with stepping), sometimes, gtk returns an internal 
+problem, sometimes no problem except the wrong values.
+
+I fear a corruption of the memory, but I don't know where. There might be 
+a bug in my program too.
+
+I've attached the prog. Just run make to compile it. The main code is in 
+gvob_main_window.c (_gvob_player_selected_cb function, line 35)
+
+Can someone tell me if there's a bug in my implementation, or if there's a 
+known bug with libdvdread / gtk, or something else ?
+
+thank you very much
+
+Vincent Torri
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: gvob-0.1.tar.bz2
+Type: application/octet-stream
+Size: 4226 bytes
+Desc: 
+URL: <https://lists.berlios.de/pipermail/ogle-devel/attachments/20061026/9716a3ae/attachment.obj>
+
+From justin at cs.duke.edu  Sun Oct 29 02:26:13 2006
+From: justin at cs.duke.edu (Justin Moore)
+Date: Sat, 28 Oct 2006 20:26:13 -0400 (EDT)
+Subject: [Ogle-devel] War on magic numbers
+Message-ID: <Pine.LNX.4.63.0610282022110.27792@kahlo.cs.duke.edu>
+
+
+    Too many places in the codebase have "magic numbers": hard-coded 
+constants that should really be replaced with #define'd values or 
+enum'ed values.  A few questions:
+
+o do you prefer #define'd values or enums?
+
+o should I create a separete dvdread/constants.h or should I place the 
+values in the header file that matches the .c file in which they're 
+contained (e.g., FPS_2500 and FPS_2997 go in ifo_print.h or should I put 
+everything in *_types.h?
+
+o what is the patch submission process?
+
+Thanks.
+-jdm
+
+Department of Computer Science, Duke University, Durham, NC 27708-0129
+Email:	justin at cs.duke.edu
+Web:	http://www.cs.duke.edu/~justin/
+
+

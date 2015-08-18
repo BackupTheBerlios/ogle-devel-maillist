@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%2C%20ifo_types.h%20and%20VIDEO_TS.IFO&In-Reply-To=%3C445F7514.7070704%40cox.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000020.html">
+   <LINK REL="Next"  HREF="000022.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO</H1>
+    <B>Russ Turner</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%2C%20ifo_types.h%20and%20VIDEO_TS.IFO&In-Reply-To=%3C445F7514.7070704%40cox.net%3E"
+       TITLE="[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO">russ.turner at cox.net
+       </A><BR>
+    <I>Mon May  8 18:43:01 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000020.html">[Ogle-devel] Release libdvdread-0.9.6
+</A></li>
+        <LI>Next message: <A HREF="000022.html">[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>I am writing an application that will automatically and reliably (!)
+determine the title of a commercial DVD.  Some DVD's provide enough
+information in a separate disc.id file, but others do not.  The
+&quot;Provider ID:&quot; field in VIDEO_TS.IFO sometimes has helpful data.  But
+in other cases, while there is useful information in the VIDEO_TS.IFO 
+file, it is not in &quot;Provider ID&quot; or the other data that is defined in 
+ifo_types.h and reported by libdvdread (ifo_dump).  The Sony movie 
+&quot;Radio&quot; is an example of such a DVD.  The name of the movie and the 
+studio can befound in VIDEO_TS.IFO with grep or cat, but is not reported 
+by libdvdread.
+
+Are there additional IFO types that I can add to the header file and the
+libdvdread programs that will capture this additional IFO information?
+
+Russ
+
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000020.html">[Ogle-devel] Release libdvdread-0.9.6
+</A></li>
+	<LI>Next message: <A HREF="000022.html">[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

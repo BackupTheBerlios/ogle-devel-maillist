@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] Ogle test release
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20Ogle%20test%20release&In-Reply-To=%3CPine.LNX.4.64.0612140931080.9690%40thorbardin.lasthome.solace.krynn%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000036.html">
+   <LINK REL="Next"  HREF="000037.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] Ogle test release</H1>
+    <B>coyote at cojot.name</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20Ogle%20test%20release&In-Reply-To=%3CPine.LNX.4.64.0612140931080.9690%40thorbardin.lasthome.solace.krynn%3E"
+       TITLE="[Ogle-devel] Ogle test release">coyote at cojot.name
+       </A><BR>
+    <I>Thu Dec 14 09:31:28 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000036.html">[Ogle-devel] Ogle test release
+</A></li>
+        <LI>Next message: <A HREF="000037.html">[Ogle-devel] Ogle test release
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#35">[ date ]</a>
+              <a href="thread.html#35">[ thread ]</a>
+              <a href="subject.html#35">[ subject ]</a>
+              <a href="author.html#35">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>
+On Wed, 13 Dec 2006, Bj|rn Englund wrote:
+
+&gt;<i> To be able to start a new development cycle I intend to release
+</I>&gt;<i> www.dtek.chalmers.se/~dvd/dist/ogle-0.9.2-cvs.tar.gz
+</I>&gt;<i> (the latest CVS) as ogle-0.9.3 on friday/saturday if no one has any
+</I>&gt;<i> serious bug reports.
+</I>&gt;<i> Please try to compile and run.
+</I>
+It fails on:
+Solaris 10 06/06 SPARC (Sb2k) with Sun Studio 11.0:
+
+DEPDIR=.deps depmode=none /bin/bash ../depcomp \
+/opt/SUN-Studio-11.0/SUNWspro/bin/cc -DPACKAGE_NAME=\&quot;\&quot; 
+-DPACKAGE_TARNAME=\&quot;\&quot; -DPACKAGE_VERSION=\&quot;\&quot; -DPACKAGE_STRING=\&quot;\&quot; 
+-DPACKAGE_BUGREPORT=\&quot;\&quot; -DPACKAGE=\&quot;ogle\&quot; -DVERSION=\&quot;0.9.2-cvs\&quot; 
+-DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 
+-DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 
+-DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 
+-DWORDS_BIGENDIAN=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_STROPTS_H=1 
+-DHAVE_POLL_H=1 -DHAVE_SYS_POLL_H=1 -DHAVE_SYS_SELECT_H=1 -DHAVE_POLL=1 
+-DHAVE_XSHM=1 -DUSE_SOLARIS_XMU=1 -DHAVE_CLOCK_GETTIME=1 -DHAVE_MADVISE=1 
+-DHAVE_POSIX_SHM=1 -DUSE_POSIX_SHM=1 -DHAVE_MLIB=1 -DLIBOGLEAO_NULL= 
+-DLIBOGLEAO_SOLARIS= -DHAVE_XML=1 -DHAVE_LIBSOCKET=1 
+-DCONFIG_FILE=\&quot;/usr/local/share/ogle/oglerc\&quot;  -I. -I.  -I.. -I../include 
+-I/usr/openwin/include  -I/usr/sfw/include -I/usr/include/libxml2  -xCC 
+-fast -fast -xtarget=ultra3cu -xarch=v8plusb -xipo -xlibmil -xlibmopt -g 
+-c video_output_x11.c
+&quot;video_output_x11.c&quot;, line 171: #warning: &quot;todo&quot;
+&quot;video_output_x11.c&quot;, line 263: warning: argument #3 is incompatible with prototype:
+          prototype: pointer to const char : 
+&quot;/usr/openwin/include/X11/Xlib.h&quot;, line 1574
+          argument : pointer to unsigned char
+&quot;video_output_x11.c&quot;, line 1610: undefined symbol: xv_image
+&quot;video_output_x11.c&quot;, line 1610: warning: implicit function declaration: XvShmCreateImage
+&quot;video_output_x11.c&quot;, line 1610: undefined symbol: xv_port
+&quot;video_output_x11.c&quot;, line 1610: undefined symbol: xv_id
+&quot;video_output_x11.c&quot;, line 1611: non-unique member requires struct/union pointer: width
+&quot;video_output_x11.c&quot;, line 1611: left operand of &quot;-&gt;&quot; must be pointer to struct/union
+&quot;video_output_x11.c&quot;, line 1612: non-unique member requires struct/union pointer: height
+&quot;video_output_x11.c&quot;, line 1612: left operand of &quot;-&gt;&quot; must be pointer to struct/union
+&quot;video_output_x11.c&quot;, line 1619: undefined symbol: xv_image
+&quot;video_output_x11.c&quot;, line 1619: undefined symbol: xv_port
+&quot;video_output_x11.c&quot;, line 1619: undefined symbol: xv_id
+&quot;video_output_x11.c&quot;, line 1620: non-unique member requires struct/union pointer: width
+&quot;video_output_x11.c&quot;, line 1620: left operand of &quot;-&gt;&quot; must be pointer to struct/union
+&quot;video_output_x11.c&quot;, line 1621: non-unique member requires struct/union pointer: height
+&quot;video_output_x11.c&quot;, line 1621: left operand of &quot;-&gt;&quot; must be pointer to struct/union
+&quot;video_output_x11.c&quot;, line 1998: warning: improper pointer/integer combination: op &quot;&gt;&quot;
+&quot;video_output_x11.c&quot;, line 2181: #warning: &quot;todo&quot;
+&quot;video_output_x11.c&quot;, line 2188: #warning: &quot;todo&quot;
+&quot;video_output_x11.c&quot;, line 2206: warning: argument #1 is incompatible with prototype:
+          prototype: pointer to unsigned char : &quot;yuv2rgb.h&quot;, line 47
+          argument : pointer to char
+&quot;video_output_x11.c&quot;, line 2210: #warning: &quot;todo&quot;
+&quot;video_output_x11.c&quot;, line 2218: #warning: &quot;todo&quot;
+&quot;video_output_x11.c&quot;, line 2230: warning: argument #1 is incompatible with prototype:
+          prototype: pointer to unsigned char : &quot;screenshot.h&quot;, line 22
+          argument : pointer to char
+cc: acomp failed for video_output_x11.c
+gmake[1]: *** [video_output_x11.o] Error 2
+gmake[1]: Leaving directory 
+`/usr/local/src/ogle-0.9.2-cvs20061214/mpeg2_video'
+gmake: *** [all-recursive] Error 1
+
+I use this script to compile ogle:
+
+#!/bin/csh
+#
+# Generic definitions
+setenv SHELL /bin/bash
+setenv PKG_CONFIG /usr/bin/pkg-config
+setenv MAKE gmake
+setenv PERL /usr/bin/perl
+#
+# Sun ONE Studio 11.0
+setenv CFLAGS &quot;-fast -xtarget=ultra3cu -xarch=v8plusb -xipo -xlibmil -xlibmopt -g&quot;
+setenv CXXFLAGS &quot;-fast -xtarget=ultra3cu -xarch=v8plusb -xipo -xlibmil -xlibmopt -g&quot;
+setenv CC /opt/SUN-Studio-11.0/SUNWspro/bin/cc
+setenv CXX /opt/SUN-Studio-11.0/SUNWspro/bin/CC
+#
+./configure --prefix=/usr/local \
+          --with-libmlib=/usr \
+          --with-libjpeg=/usr/sfw \
+          --with-dvdread=/usr/local \
+          --with-liba52=/usr/local \
+          --with-libmad=/usr/local \
+          --with-xml-prefix=/usr
+
+
+The video_output_x11.c from my previous ogle snapshost still does compile 
+fine:
+
+<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">root at ergoth</A>:[/usr/local/src/ogle-0.9.2-cvs/mpeg2_video][526]# ls -ld video_output_x11.c
+-rw-r--r--   1 root     root       62727 Sep 29  2005 video_output_x11.c
+
+Regards,
+
+
+-- 
+,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,
+Vincent S. Cojot, Computer Engineering. STEP project. _.,-*~'`^`'~*-,._.,-*~
+Ecole Polytechnique de Montreal, Comite Micro-Informatique. _.,-*~'`^`'~*-,.
+Linux Xview/OpenLook resources page _.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'
+<A HREF="http://step.polymtl.ca/~coyote">http://step.polymtl.ca/~coyote</A>  _.,-*~'`^`'~*-,._ <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">coyote at NOSPAM4cojot.name</A>
+
+They cannot scare me with their empty spaces
+Between stars - on stars where no human race is
+I have it in me so much nearer home
+To scare myself with my own desert places.       - Robert Frost
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000036.html">[Ogle-devel] Ogle test release
+</A></li>
+	<LI>Next message: <A HREF="000037.html">[Ogle-devel] Ogle test release
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#35">[ date ]</a>
+              <a href="thread.html#35">[ thread ]</a>
+              <a href="subject.html#35">[ subject ]</a>
+              <a href="author.html#35">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] libdvdread UDF2.5
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2008-June/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%20UDF2.5&In-Reply-To=%3C485C8651.2070707%40lundman.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000045.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] libdvdread UDF2.5</H1>
+    <B>lundman</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%20UDF2.5&In-Reply-To=%3C485C8651.2070707%40lundman.net%3E"
+       TITLE="[Ogle-devel] libdvdread UDF2.5">lundman at lundman.net
+       </A><BR>
+    <I>Sat Jun 21 06:40:49 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000045.html">[Ogle-devel] [EPAMP] an effect plugin API for media players: anyone	interested?
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>
+I realise this list has been rather dead lately, but maybe there are a 
+few lurkers out there who might be interested in helping.
+
+I was looking at the possibility to get libdvdread to read the new 
+fangled BD5 .ISO files, which mostly are just UDF2.50 (at a guess). In 
+my example, I called the ISO file &quot;highlander.iso&quot;.
+
+If I step through the code attempting to open an ISO file, I get the 
+following happen:
+
+
+(gdb)
+#0  UDFFindFile (device=0x409170, filename=0x2f378 &quot;/&quot;, filesize=0x0) at 
+dvd_udf.c:979
+#1  0x00026f8d in DVDOpenImageFile (location=0x409560 
+&quot;highlander-bd5.iso&quot;, have_css=0) at dvd_reader.c:333
+#2  0x000272fd in DVDOpen (path=0x409200 &quot;highlander-bd5.iso&quot;) at 
+dvd_reader.c:488
+
+
+   /* sanity check, is it a valid UDF image, can we find the root dir */
+   if(!UDFFindFile(dvd, &quot;/&quot;, NULL)) {
+
+
+#0  UDFFindFile (device=0x409170, filename=0x2f378 &quot;/&quot;, filesize=0x0) at 
+dvd_udf.c:979
+(gdb) n
+982       tokenline[0] = '\0';
+(gdb) n
+983       strcat( tokenline, filename );
+(gdb) n
+986       if(!(GetUDFCache(device, PartitionCache, 0, &amp;partition) &amp;&amp;
+(gdb) n
+989         if( !UDFFindPartition( device, 0, &amp;partition ) ) {
+(gdb) n
+992         SetUDFCache(device, PartitionCache, 0, &amp;partition);
+(gdb) p partition
+$2 = {
+   valid = 1,
+   VolumeDesc = &quot;HIGHLANDER&quot;, '\0' &lt;repeats 54 times&gt;, 
+&quot;\003\000\000\000&#65533;@\000P&#65533;@ 
+ 
+@\000H&#65533;&#65533;&#65533;\000\000\000\000\000\000&#65533;\001\b\000\003\000\000\000\000\000]Y\001&#65533;\004\0 
+ 
+  000\000\000&gt;&#65533;\002\000H&#65533;&#65533;&#65533;&#65533;&amp;\000&#65533;\000\000\000\000&#65533;h\002\000X&#65533;&#65533;&#65533;&quot;,
+   Flags = 1,
+   Number = 0,
+   Contents = &quot;\000+NSR03&quot;, '\0' &lt;repeats 24 times&gt;,
+   AccessType = 4232544,
+   Start = 288,
+   Length = 2291200
+}
+(gdb)
+994         LogBlock = dvdalign_lbmalloc(device, 1);
+(gdb)
+995         if(!LogBlock) {
+
+
+
+
+
+(gdb) n
+999         lbnum = partition.Start;
+(gdb)
+1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+(gdb)
+1004            UDFDescriptor( LogBlock, &amp;TagID );
+(gdb)
+1007          printf(&quot;TagID %d\n&quot;, TagID);
+(gdb)
+TagID 266
+1009          if( TagID == 256 ) {  // File Set Descriptor
+(gdb)
+1014                 &amp;&amp; ( TagID != 8 ) &amp;&amp; ( TagID != 256 ) );
+(gdb)
+1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+(gdb)
+1004            UDFDescriptor( LogBlock, &amp;TagID );
+(gdb)
+1007          printf(&quot;TagID %d\n&quot;, TagID);
+(gdb)
+TagID 0
+1009          if( TagID == 256 ) {  // File Set Descriptor
+(gdb)
+1014                 &amp;&amp; ( TagID != 8 ) &amp;&amp; ( TagID != 256 ) );
+(gdb)
+1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+(gdb)
+1004            UDFDescriptor( LogBlock, &amp;TagID );
+(gdb)
+1007          printf(&quot;TagID %d\n&quot;, TagID);
+(gdb)
+TagID 0
+
+[snip] It reads TagID=0 for about 32 blocks.
+
+
+
+1004            UDFDescriptor( LogBlock, &amp;TagID );
+(gdb)
+1007          printf(&quot;TagID %d\n&quot;, TagID);
+(gdb)
+TagID 256
+1009          if( TagID == 256 ) {  // File Set Descriptor
+(gdb) p lbnum
+$3 = 321
+1010            UDFLongAD( &amp;LogBlock[ 400 ], &amp;RootICB );
+(gdb)
+1014                 &amp;&amp; ( TagID != 8 ) &amp;&amp; ( TagID != 256 ) );
+(gdb) p RootICB
+$4 = {
+   Location = 2,
+   Length = 2048,
+   Flags = 0 '\0',
+   Partition = 1
+}
+
+(gdb) n
+1016        dvdalign_lbfree(device, LogBlock);
+(gdb) n
+1019        if( TagID != 256 ) {
+(gdb) n
+1022        if( RootICB.Partition != 0 ) {
+(gdb) n
+1023          printf(&quot;RootICB.Partition %d.\n&quot;, RootICB.Partition);
+
+
+This is the first place we would error out, as our Partition is &quot;1&quot; and 
+not the expected &quot;0&quot;. If we ignore it:
+
+
+(gdb) n
+1028        SetUDFCache(device, RootICBCache, 0, &amp;RootICB);
+(gdb) n
+1032      if( !UDFMapICB( device, RootICB, &amp;filetype, &amp;partition, &amp;File 
+) ) {
+(gdb) s
+UDFMapICB (device=0x409170, ICB={Location = 2, Length = 2048, Flags = 0 
+'\0', Partition = 1}, FileType=0xbfffe483 &quot;\004/&quot;, partition=0xbfffeca8, 
+File=0xbfffec90) at dvd_udf.c:660
+660       lbnum = partition-&gt;Start + ICB.Location;
+(gdb) p lbnum
+$5 = 4234400
+
+
+(gdb) n
+661       tmpmap.lbn = lbnum;
+(gdb) n
+662       if(GetUDFCache(device, MapCache, lbnum, &amp;tmpmap)) {
+(gdb) n
+668       LogBlock = dvdalign_lbmalloc(device, 1);
+(gdb) n
+669       if(!LogBlock) {
+(gdb) n
+674         if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+(gdb) n
+677           UDFDescriptor( LogBlock, &amp;TagID );
+(gdb) n
+680         printf(&quot; TagID %d\n&quot;, TagID);
+(gdb) n
+  TagID 0
+682         if( TagID == 261 ) {
+(gdb) n
+691                  / DVD_VIDEO_LB_LEN ) &amp;&amp; ( TagID != 261 ) );
+(gdb) n
+693       dvdalign_lbfree(device, LogBlock);
+(gdb) n
+694       return 0;
+
+And this is the next place we fail. It wants TagID 261, but gets 0. it 
+only tries for 1 block. If I make the while() continue until we get a 
+261, it takes about 300 blocks, and then the filetype is wastly 
+different to &quot;4&quot;.
+
+
+Anyone have a rough idea at the size of the task to support 2.50/2.60?
+
+
+Lund
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000045.html">[Ogle-devel] [EPAMP] an effect plugin API for media players: anyone	interested?
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] Nasty regression in dvdread since removal of getbits()	in nav_read.c
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2007-July/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20Nasty%20regression%20in%20dvdread%20since%20removal%20of%20getbits%28%29%0A%09in%20nav_read.c&In-Reply-To=%3C46ACD1C7.3080408%40email.it%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000040.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] Nasty regression in dvdread since removal of getbits()	in nav_read.c</H1>
+    <B>Nico Sabbi</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20Nasty%20regression%20in%20dvdread%20since%20removal%20of%20getbits%28%29%0A%09in%20nav_read.c&In-Reply-To=%3C46ACD1C7.3080408%40email.it%3E"
+       TITLE="[Ogle-devel] Nasty regression in dvdread since removal of getbits()	in nav_read.c">nsabbi at email.it
+       </A><BR>
+    <I>Sun Jul 29 19:43:35 CEST 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000040.html">[Ogle-devel] Nasty regression in dvdread since removal	of	getbits() in nav_read.c
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi,
+since nav_read.c was changed to use conditional bitfields rather than 
+calls to getbits()
+that file is completely broken: the C standard doesn't guarantee how 
+bitfields should
+be laid out in memory (and additionally to me those 2 different layout 
+-e.g. in btni_t-
+seem to be defined incorrectly) making this &quot;feature&quot; too much dipendent 
+on the
+compiler and endiannes used.
+
+The result is that the navigation is completely broken, as you
+can verify yourself when compiling my fork of dvdnav against dvdread 
+0.9.4+.
+(svn co <A HREF="svn://dvdnav.mplayerhq.hu/dvdnav">svn://dvdnav.mplayerhq.hu/dvdnav</A> )
+
+May I ask you why you did it ? :-)     
+saving code is nice, but not at the cost of correctness.
+Can you please revert that change and restore the original code?
+
+Moreover, where can I access the cvs of dvdread? I need to keep
+track of the single changes.
+
+Thanks a lot,
+    Nico
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000040.html">[Ogle-devel] Nasty regression in dvdread since removal	of	getbits() in nav_read.c
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

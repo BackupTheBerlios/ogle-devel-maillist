@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] Fwd: Bug#347276: libdvdread3: say that one should be root in the error messages
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20Fwd%3A%20Bug%23347276%3A%20libdvdread3%3A%20say%20that%20one%20should%20be%20root%20in%20the%20error%20messages&In-Reply-To=%3C7A59A8C4-F0F3-422F-9C48-4F604821D3F0%40gmx.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000001.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] Fwd: Bug#347276: libdvdread3: say that one should be root in the error messages</H1>
+    <B>Mikael Hedin</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20Fwd%3A%20Bug%23347276%3A%20libdvdread3%3A%20say%20that%20one%20should%20be%20root%20in%20the%20error%20messages&In-Reply-To=%3C7A59A8C4-F0F3-422F-9C48-4F604821D3F0%40gmx.net%3E"
+       TITLE="[Ogle-devel] Fwd: Bug#347276: libdvdread3: say that one should be root in the error messages">mikael.hedin at gmx.net
+       </A><BR>
+    <I>Wed Jan 18 22:21:01 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000001.html">[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Is this error message optimal? I the device access needed for more  
+than css auth? Then the error should be from libdvdcss?
+
+See <A HREF="http://bugs.debian.org/347276">http://bugs.debian.org/347276</A> for the whole conversation.
+
+/Micce
+
+Vidarebefordrat brev:
+
+&gt;<i> Returnerat fr&#229;n: Dan Jacobson &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">jidanni at jidanni.org</A>&gt;
+</I>&gt;<i> Fr&#229;n: Dan Jacobson &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">jidanni at jidanni.org</A>&gt;
+</I>&gt;<i> Datum: m&#229;ndag 9 jan 2006 21.30.57 GMT+01:00
+</I>&gt;<i> Returnerat till: <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">debian-bugs-dist at lists.debian.org</A>
+</I>&gt;<i> Till: Debian Bug Tracking System &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">submit at bugs.debian.org</A>&gt;
+</I>&gt;<i> Returnerat (kopia): <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">robos at muon.de</A>, Mikael Hedin &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">micce at debian.org</A>&gt;
+</I>&gt;<i> &#196;mne: Bug#347276: libdvdread3: say that one should be root in the  
+</I>&gt;<i> error messages
+</I>&gt;<i> Svara till: Dan Jacobson &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">jidanni at jidanni.org</A>&gt;, <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">347276 at bugs.debian.org</A>
+</I>&gt;<i>
+</I>&gt;<i> Package: libdvdread3
+</I>&gt;<i> Version: 0.9.4-5.1
+</I>&gt;<i> Severity: minor
+</I>&gt;<i>
+</I>&gt;<i> The problem is that the user was not root.
+</I>&gt;<i> If that was mentioned in the error messages, it would have saved lots
+</I>&gt;<i> of head scratching. By the way, the user, not root, mounted the DVD.
+</I>&gt;<i>
+</I>&gt;<i> ...
+</I>&gt;<i> libdvdread: Can't open /dev/cdrom for reading
+</I>&gt;<i> ...
+</I>&gt;<i> [Error] Path thingy didn't work '(null)'
+</I>&gt;<i> [Error] Try someting like -i /cdrom, /dvd  or /mnt/dvd
+</I>&gt;<i> $ vobcopy  -i /cdrom/ -m
+</I>&gt;<i> [Hint] You use -i. Normally this is not necessary, vobcopy finds  
+</I>&gt;<i> the input dir b
+</I>&gt;<i> y itself. This option is only there if vobcopy makes trouble.
+</I>&gt;<i> [Hint] If vobcopy makes trouble, please mail me so that I can fix  
+</I>&gt;<i> this (<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">robos at mu</A>
+</I>&gt;<i> on.de). Thanks
+</I>&gt;<i> Vobcopy 0.5.14 - GPL Copyright (c) 2001 - 2004 <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">robos at muon.de</A>
+</I>&gt;<i> [Hint] All lines starting with &quot;libdvdread:&quot; are not from vobcopy  
+</I>&gt;<i> but from the l
+</I>&gt;<i> ibdvdread-library
+</I>&gt;<i> Device /cdrom mount on /dev/hdc
+</I>&gt;<i>
+</I>&gt;<i> path to dvd: /dev/cdrom
+</I>&gt;<i> libdvdread: Using libdvdcss version 1.2.9 for DVD access
+</I>&gt;<i> libdvdread: Could not open /dev/cdrom with libdvdcss.
+</I>&gt;<i> libdvdread: Can't open /dev/cdrom for reading
+</I>&gt;<i>
+</I>&gt;<i> [Error] Path thingy didn't work '(null)'
+</I>&gt;<i> [Error] Try someting like -i /cdrom, /dvd  or /mnt/dvd
+</I>&gt;<i> $ df /cdrom/
+</I>&gt;<i> Filesystem           1K-blocks      Used Available Use% Mounted on
+</I>&gt;<i> /dev/hdc               3369440   3369440         0 100% /cdrom
+</I>&gt;<i> $ mount|grep ...
+</I>&gt;<i> /dev/hdc on /cdrom type iso9660  
+</I>&gt;<i> (ro,noexec,nosuid,nodev,iocharset=cp950,user=jidanni)
+</I>&gt;<i>
+</I>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: Mikael Hedin.vcf
+Type: text/directory
+Size: 357 bytes
+Desc: not available
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/ogle-devel/attachments/20060118/b3817688/attachment.bin">https://lists.berlios.de/pipermail/ogle-devel/attachments/20060118/b3817688/attachment.bin</A>&gt;
+-------------- next part --------------
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000001.html">[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

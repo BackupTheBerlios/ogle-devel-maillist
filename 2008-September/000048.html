@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] libdvdread UDF2.5
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2008-September/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%20UDF2.5&In-Reply-To=%3C48DC2805.2070704%40lundman.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000047.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] libdvdread UDF2.5</H1>
+    <B>Jorgen Lundman</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%20UDF2.5&In-Reply-To=%3C48DC2805.2070704%40lundman.net%3E"
+       TITLE="[Ogle-devel] libdvdread UDF2.5">lundman at lundman.net
+       </A><BR>
+    <I>Fri Sep 26 02:08:37 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000047.html">[Ogle-devel] Build error
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#48">[ date ]</a>
+              <a href="thread.html#48">[ thread ]</a>
+              <a href="subject.html#48">[ subject ]</a>
+              <a href="author.html#48">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>
+Just a quick note to say it has been done, should anyone else seek what 
+I was after.
+
+<A HREF="http://lists.mplayerhq.hu/pipermail/dvdnav-discuss/2008-September/000789.html">http://lists.mplayerhq.hu/pipermail/dvdnav-discuss/2008-September/000789.html</A>
+
+Lund
+
+
+lundman wrote:
+&gt;<i> I realise this list has been rather dead lately, but maybe there are a 
+</I>&gt;<i> few lurkers out there who might be interested in helping.
+</I>&gt;<i> 
+</I>&gt;<i> I was looking at the possibility to get libdvdread to read the new 
+</I>&gt;<i> fangled BD5 .ISO files, which mostly are just UDF2.50 (at a guess). In 
+</I>&gt;<i> my example, I called the ISO file &quot;highlander.iso&quot;.
+</I>&gt;<i> 
+</I>&gt;<i> If I step through the code attempting to open an ISO file, I get the 
+</I>&gt;<i> following happen:
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> (gdb)
+</I>&gt;<i> #0  UDFFindFile (device=0x409170, filename=0x2f378 &quot;/&quot;, filesize=0x0) at 
+</I>&gt;<i> dvd_udf.c:979
+</I>&gt;<i> #1  0x00026f8d in DVDOpenImageFile (location=0x409560 
+</I>&gt;<i> &quot;highlander-bd5.iso&quot;, have_css=0) at dvd_reader.c:333
+</I>&gt;<i> #2  0x000272fd in DVDOpen (path=0x409200 &quot;highlander-bd5.iso&quot;) at 
+</I>&gt;<i> dvd_reader.c:488
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i>    /* sanity check, is it a valid UDF image, can we find the root dir */
+</I>&gt;<i>    if(!UDFFindFile(dvd, &quot;/&quot;, NULL)) {
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> #0  UDFFindFile (device=0x409170, filename=0x2f378 &quot;/&quot;, filesize=0x0) at 
+</I>&gt;<i> dvd_udf.c:979
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 982       tokenline[0] = '\0';
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 983       strcat( tokenline, filename );
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 986       if(!(GetUDFCache(device, PartitionCache, 0, &amp;partition) &amp;&amp;
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 989         if( !UDFFindPartition( device, 0, &amp;partition ) ) {
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 992         SetUDFCache(device, PartitionCache, 0, &amp;partition);
+</I>&gt;<i> (gdb) p partition
+</I>&gt;<i> $2 = {
+</I>&gt;<i>    valid = 1,
+</I>&gt;<i>    VolumeDesc = &quot;HIGHLANDER&quot;, '\0' &lt;repeats 54 times&gt;, 
+</I>&gt;<i> &quot;\003\000\000\000&#65533;@\000P&#65533;@ 
+</I>&gt;<i>  
+</I>&gt;<i> @\000H&#65533;&#65533;&#65533;\000\000\000\000\000\000&#65533;\001\b\000\003\000\000\000\000\000]Y\001&#65533;\004\0 
+</I>&gt;<i>  
+</I>&gt;<i>   000\000\000&gt;&#65533;\002\000H&#65533;&#65533;&#65533;&#65533;&amp;\000&#65533;\000\000\000\000&#65533;h\002\000X&#65533;&#65533;&#65533;&quot;,
+</I>&gt;<i>    Flags = 1,
+</I>&gt;<i>    Number = 0,
+</I>&gt;<i>    Contents = &quot;\000+NSR03&quot;, '\0' &lt;repeats 24 times&gt;,
+</I>&gt;<i>    AccessType = 4232544,
+</I>&gt;<i>    Start = 288,
+</I>&gt;<i>    Length = 2291200
+</I>&gt;<i> }
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 994         LogBlock = dvdalign_lbmalloc(device, 1);
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 995         if(!LogBlock) {
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 999         lbnum = partition.Start;
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1004            UDFDescriptor( LogBlock, &amp;TagID );
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1007          printf(&quot;TagID %d\n&quot;, TagID);
+</I>&gt;<i> (gdb)
+</I>&gt;<i> TagID 266
+</I>&gt;<i> 1009          if( TagID == 256 ) {  // File Set Descriptor
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1014                 &amp;&amp; ( TagID != 8 ) &amp;&amp; ( TagID != 256 ) );
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1004            UDFDescriptor( LogBlock, &amp;TagID );
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1007          printf(&quot;TagID %d\n&quot;, TagID);
+</I>&gt;<i> (gdb)
+</I>&gt;<i> TagID 0
+</I>&gt;<i> 1009          if( TagID == 256 ) {  // File Set Descriptor
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1014                 &amp;&amp; ( TagID != 8 ) &amp;&amp; ( TagID != 256 ) );
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1001          if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1004            UDFDescriptor( LogBlock, &amp;TagID );
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1007          printf(&quot;TagID %d\n&quot;, TagID);
+</I>&gt;<i> (gdb)
+</I>&gt;<i> TagID 0
+</I>&gt;<i> 
+</I>&gt;<i> [snip] It reads TagID=0 for about 32 blocks.
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 1004            UDFDescriptor( LogBlock, &amp;TagID );
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1007          printf(&quot;TagID %d\n&quot;, TagID);
+</I>&gt;<i> (gdb)
+</I>&gt;<i> TagID 256
+</I>&gt;<i> 1009          if( TagID == 256 ) {  // File Set Descriptor
+</I>&gt;<i> (gdb) p lbnum
+</I>&gt;<i> $3 = 321
+</I>&gt;<i> 1010            UDFLongAD( &amp;LogBlock[ 400 ], &amp;RootICB );
+</I>&gt;<i> (gdb)
+</I>&gt;<i> 1014                 &amp;&amp; ( TagID != 8 ) &amp;&amp; ( TagID != 256 ) );
+</I>&gt;<i> (gdb) p RootICB
+</I>&gt;<i> $4 = {
+</I>&gt;<i>    Location = 2,
+</I>&gt;<i>    Length = 2048,
+</I>&gt;<i>    Flags = 0 '\0',
+</I>&gt;<i>    Partition = 1
+</I>&gt;<i> }
+</I>&gt;<i> 
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 1016        dvdalign_lbfree(device, LogBlock);
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 1019        if( TagID != 256 ) {
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 1022        if( RootICB.Partition != 0 ) {
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 1023          printf(&quot;RootICB.Partition %d.\n&quot;, RootICB.Partition);
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> This is the first place we would error out, as our Partition is &quot;1&quot; and 
+</I>&gt;<i> not the expected &quot;0&quot;. If we ignore it:
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 1028        SetUDFCache(device, RootICBCache, 0, &amp;RootICB);
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 1032      if( !UDFMapICB( device, RootICB, &amp;filetype, &amp;partition, &amp;File 
+</I>&gt;<i> ) ) {
+</I>&gt;<i> (gdb) s
+</I>&gt;<i> UDFMapICB (device=0x409170, ICB={Location = 2, Length = 2048, Flags = 0 
+</I>&gt;<i> '\0', Partition = 1}, FileType=0xbfffe483 &quot;\004/&quot;, partition=0xbfffeca8, 
+</I>&gt;<i> File=0xbfffec90) at dvd_udf.c:660
+</I>&gt;<i> 660       lbnum = partition-&gt;Start + ICB.Location;
+</I>&gt;<i> (gdb) p lbnum
+</I>&gt;<i> $5 = 4234400
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 661       tmpmap.lbn = lbnum;
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 662       if(GetUDFCache(device, MapCache, lbnum, &amp;tmpmap)) {
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 668       LogBlock = dvdalign_lbmalloc(device, 1);
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 669       if(!LogBlock) {
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 674         if( DVDReadLBUDF( device, lbnum++, 1, LogBlock, 0 ) &lt;= 0 ) {
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 677           UDFDescriptor( LogBlock, &amp;TagID );
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 680         printf(&quot; TagID %d\n&quot;, TagID);
+</I>&gt;<i> (gdb) n
+</I>&gt;<i>   TagID 0
+</I>&gt;<i> 682         if( TagID == 261 ) {
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 691                  / DVD_VIDEO_LB_LEN ) &amp;&amp; ( TagID != 261 ) );
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 693       dvdalign_lbfree(device, LogBlock);
+</I>&gt;<i> (gdb) n
+</I>&gt;<i> 694       return 0;
+</I>&gt;<i> 
+</I>&gt;<i> And this is the next place we fail. It wants TagID 261, but gets 0. it 
+</I>&gt;<i> only tries for 1 block. If I make the while() continue until we get a 
+</I>&gt;<i> 261, it takes about 300 blocks, and then the filetype is wastly 
+</I>&gt;<i> different to &quot;4&quot;.
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> Anyone have a rough idea at the size of the task to support 2.50/2.60?
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> Lund
+</I>&gt;<i> 
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> Ogle-devel mailing list
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">Ogle-devel at lists.berlios.de</A>
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">https://lists.berlios.de/mailman/listinfo/ogle-devel</A>
+</I>
+-- 
+Jorgen Lundman       | &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">lundman at lundman.net</A>&gt;
+Unix Administrator   | +81 (0)3 -5456-2687 ext 1017 (work)
+Shibuya-ku, Tokyo    | +81 (0)90-5578-8500          (cell)
+Japan                | +81 (0)3 -3375-1767          (home)
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000047.html">[Ogle-devel] Build error
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#48">[ date ]</a>
+              <a href="thread.html#48">[ thread ]</a>
+              <a href="subject.html#48">[ subject ]</a>
+              <a href="author.html#48">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

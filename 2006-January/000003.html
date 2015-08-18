@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20%5BPATCH%5D%20DVD%20subpicture/audio%20stream%20mapping&In-Reply-To=%3C20060118234239.GC11287%40biurrun.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000002.html">
+   <LINK REL="Next"  HREF="000004.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping</H1>
+    <B>Diego Biurrun</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20%5BPATCH%5D%20DVD%20subpicture/audio%20stream%20mapping&In-Reply-To=%3C20060118234239.GC11287%40biurrun.de%3E"
+       TITLE="[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping">diego at biurrun.de
+       </A><BR>
+    <I>Thu Jan 19 00:43:08 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000002.html">[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+</A></li>
+        <LI>Next message: <A HREF="000004.html">[Ogle-devel] [PATCH] ASM-optimized byteswap functions
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>On Thu, Jan 19, 2006 at 12:35:26AM +0100, Diego Biurrun wrote:
+&gt;<i> [Once again, this time with patch attached, sorry...]
+</I>
+And this time with a patch that actually applies cleanly to libdvdread
+CVS.  Apologies for testing everybody's patience so much..
+
+Diego
+
+&gt;<i> this patch was submitted in August 2005 to MPlayer.  It was applied with
+</I>&gt;<i> slight modifications, please review and maybe apply it to libdvdread.
+</I>&gt;<i> The patch is attached, the message the author sent is pasted below.
+</I>&gt;<i> 
+</I>&gt;<i> Regards
+</I>&gt;<i> 
+</I>&gt;<i> Diego
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> <A HREF="http://mplayerhq.hu/pipermail/mplayer-dev-eng/2005-August/036580.html">http://mplayerhq.hu/pipermail/mplayer-dev-eng/2005-August/036580.html</A>
+</I>&gt;<i> 
+</I>&gt;<i> Hi all!
+</I>&gt;<i> 
+</I>&gt;<i> I had to realise that mplayer entirely ignores the logical mapping info 
+</I>&gt;<i> between the various dvd audio/subtitle tracks and the corresponding mpeg 
+</I>&gt;<i> streams, and does an identity mapping instead.
+</I>&gt;<i> But I guess it's because libdvdread lacks the support for it :)
+</I>&gt;<i> So here is the patch that fixes this shortcoming...
+</I>&gt;<i> 
+</I>&gt;<i> Some background info:
+</I>&gt;<i> The audio and subtitle streams as specified in the IFO do not correspond
+</I>&gt;<i> one-to-one to the streams in the mpeg-ps, but there is a mapping table
+</I>&gt;<i> which specifies the assignments. In case of audio this hasn't been a big
+</I>&gt;<i> problem unless the dvd has been really screwed up, because there are
+</I>&gt;<i> the same number of logical streams as mpeg streams. So maybe you have a
+</I>&gt;<i> 0-&gt;1, 1-&gt;0 mapping in which case selecting one language in mplayer gets
+</I>&gt;<i> you the other soundtrack, but both tracks are accessible.
+</I>&gt;<i> 
+</I>&gt;<i> Subtitles are not so simple however, because for one logical stream you
+</I>&gt;<i> can have multiple mpeg subpicture streams. If you create a dvd for a
+</I>&gt;<i> 16:9 movie, you have to specify a spu stream for 4:3 letterboxed display
+</I>&gt;<i> and also for 16:9 widescreen display. Up to this time I have run across
+</I>&gt;<i> only one dvd which did not map the same stream to both modes. So not a
+</I>&gt;<i> frequent case, but until now mplayer could not display the subtitles
+</I>&gt;<i> correctly for these dvds, because it considered logical stream N to map
+</I>&gt;<i> to mpeg stream N. But in this case the mapping is e.g. lang1-&gt;{0,1}
+</I>&gt;<i> lang2-&gt;{2,3}, so when selecting lang1 mplayer would play lang1 stream
+</I>&gt;<i> for letterbox, and when selecting lang2, it would play lang1 stream for
+</I>&gt;<i> widescreen. The lang2 sub would be totally inaccessible, even with -sid,
+</I>&gt;<i> because the code ignores values higher than the maximum number of subs.
+</I>&gt;<i> 
+</I>&gt;<i> So if you had problems like this, hopefully this will fix it. Patch is
+</I>&gt;<i> against the last CVS snapshot accessible from the webpage (20050806).
+</I>&gt;<i> 
+</I>&gt;<i> Regards,
+</I>&gt;<i> Lehel
+</I>-------------- next part --------------
+Index: dvdread/ifo_print.c
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/ifo_print.c,v
+retrieving revision 1.25
+diff -u -r1.25 ifo_print.c
+--- dvdread/ifo_print.c	15 Sep 2005 16:54:29 -0000	1.25
++++ dvdread/ifo_print.c	18 Jan 2006 23:40:03 -0000
+@@ -793,14 +793,14 @@
+   ifoPrint_USER_OPS(&amp;pgc-&gt;prohibited_ops);
+   
+   for(i = 0; i &lt; 8; i++) {
+-    if(pgc-&gt;audio_control[i] &amp; 0x8000) { /* The 'is present' bit */
++      if(pgc-&gt;audio_control[i].present) {
+       printf(&quot;Audio stream %i control: %04x\n&quot;, 
+              i, pgc-&gt;audio_control[i]);
+     }
+   }
+   
+   for(i = 0; i &lt; 32; i++) {
+-    if(pgc-&gt;subp_control[i] &amp; 0x80000000) { /* The 'is present' bit */
++    if(pgc-&gt;subp_control[i].present) {
+       printf(&quot;Subpicture stream %2i control: %08x\n&quot;, 
+              i, pgc-&gt;subp_control[i]);
+     }
+Index: dvdread/ifo_read.c
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/ifo_read.c,v
+retrieving revision 1.33
+diff -u -r1.33 ifo_read.c
+--- dvdread/ifo_read.c	19 Sep 2005 13:44:27 -0000	1.33
++++ dvdread/ifo_read.c	18 Jan 2006 23:40:03 -0000
+@@ -751,10 +751,6 @@
+   B2N_16(pgc-&gt;cell_playback_offset);
+   B2N_16(pgc-&gt;cell_position_offset);
+ 
+-  for(i = 0; i &lt; 8; i++)
+-    B2N_16(pgc-&gt;audio_control[i]);
+-  for(i = 0; i &lt; 32; i++)
+-    B2N_32(pgc-&gt;subp_control[i]);
+   for(i = 0; i &lt; 16; i++)
+     B2N_32(pgc-&gt;palette[i]);
+   
+@@ -763,10 +759,10 @@
+ 
+   /* verify time (look at print_time) */
+   for(i = 0; i &lt; 8; i++)
+-    if(!pgc-&gt;audio_control[i] &amp; 0x8000) /* The 'is present' bit */
++    if(!pgc-&gt;audio_control[i].present)
+       CHECK_ZERO(pgc-&gt;audio_control[i]);
+   for(i = 0; i &lt; 32; i++)
+-    if(!pgc-&gt;subp_control[i] &amp; 0x80000000) /* The 'is present' bit */
++    if(!pgc-&gt;subp_control[i].present)
+       CHECK_ZERO(pgc-&gt;subp_control[i]);
+   
+   /* Check that time is 0:0:0:0 also if nr_of_programs == 0 */
+Index: dvdread/ifo_types.h
+===================================================================
+RCS file: /cvsroot/ogle/libdvdread/dvdread/ifo_types.h,v
+retrieving revision 1.17
+diff -u -r1.17 ifo_types.h
+--- dvdread/ifo_types.h	18 Sep 2005 18:02:08 -0000	1.17
++++ dvdread/ifo_types.h	18 Jan 2006 23:40:03 -0000
+@@ -403,6 +403,55 @@
+ } ATTRIBUTE_PACKED user_ops_t;
+ 
+ /**
++ * Subpicture stream mapping for a subtitle
++ */
++typedef struct {
++#ifdef WORDS_BIGENDIAN
++  unsigned int present   : 1;
++  unsigned int zero1     : 2;
++  unsigned int s_4p3     : 5; /* stream for 4:3 on any display */
++
++  unsigned int zero2     : 3;
++  unsigned int s_wide    : 5; /* stream for 16:9 on widescreen display */
++
++  unsigned int zero3     : 3;
++  unsigned int s_lbox    : 5; /* stream for 16:9 on letterboxed 4:3 display */
++
++  unsigned int zero4     : 3;
++  unsigned int s_panscan : 5; /* stream for 16:9 with pan&amp;scan data on 4:3 display */
++#else
++  unsigned int s_4p3     : 5; /* stream for 4:3 on any display */
++  unsigned int zero1     : 2;
++  unsigned int present   : 1;
++
++  unsigned int s_wide    : 5; /* stream for 16:9 on widescreen display */
++  unsigned int zero2     : 3;
++
++  unsigned int s_lbox    : 5; /* stream for 16:9 on letterboxed 4:3 display */
++  unsigned int zero3     : 3;
++
++  unsigned int s_panscan : 5; /* stream for 16:9 with pan&amp;scan data on 4:3 display */
++  unsigned int zero4     : 3;
++#endif
++} ATTRIBUTE_PACKED subp_mapping_t;
++
++/**
++ * Audio stream mapping for a soundtrack
++ */
++typedef struct {
++#ifdef WORDS_BIGENDIAN
++  unsigned int present : 1;
++  unsigned int zero1   : 4;
++  unsigned int s_audio : 3;
++#else
++  unsigned int s_audio : 3;
++  unsigned int zero1   : 4;
++  unsigned int present : 1;
++#endif
++  uint8_t zero2;
++} ATTRIBUTE_PACKED audio_mapping_t;
++
++/**
+  * Program Chain Information.
+  */
+ typedef struct {
+@@ -411,8 +460,8 @@
+   uint8_t  nr_of_cells;
+   dvd_time_t playback_time;
+   user_ops_t prohibited_ops;
+-  uint16_t audio_control[8]; /* New type? */
+-  uint32_t subp_control[32]; /* New type? */
++  audio_mapping_t audio_control[8];
++  subp_mapping_t subp_control[32];
+   uint16_t next_pgc_nr;
+   uint16_t prev_pgc_nr;
+   uint16_t goup_pgc_nr;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000002.html">[Ogle-devel] [PATCH] DVD subpicture/audio stream mapping
+</A></li>
+	<LI>Next message: <A HREF="000004.html">[Ogle-devel] [PATCH] ASM-optimized byteswap functions
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

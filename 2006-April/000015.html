@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] ogle plays DVD video at double speed.
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20ogle%20plays%20DVD%20video%20at%20double%20speed.&In-Reply-To=%3Cop.s63d7jgznze9d7%40mail.piments.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000016.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] ogle plays DVD video at double speed.</H1>
+    <B>oggy at piments.com</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20ogle%20plays%20DVD%20video%20at%20double%20speed.&In-Reply-To=%3Cop.s63d7jgznze9d7%40mail.piments.com%3E"
+       TITLE="[Ogle-devel] ogle plays DVD video at double speed.">oggy at piments.com
+       </A><BR>
+    <I>Thu Apr  6 19:29:01 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000016.html">[Ogle-devel] [PATCH] ogle - updating TTN in get_VTS_TT/get_VTS_PTT
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#15">[ date ]</a>
+              <a href="thread.html#15">[ thread ]</a>
+              <a href="subject.html#15">[ subject ]</a>
+              <a href="author.html#15">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi,
+
+I have ogle running beautifully on suse 9.2 but when installed on gentoo I  
+get double speed video with no sound. (In fact I can chroot to suse from  
+gentoo and ogle works fine, so that seems to rule out kernel or sound  
+driver issues).
+
+
+I presume the lack of audio is because it is playing double speed.
+It's so close to working that I dont think the problem can be that great.
+
+I'm using a commercial pressing of shrek to test with. I get this to the  
+console:
+
+ERROR[ogle_audio]: odelay error: Input/output error
+-ERROR[ogle_audio]: odelay error: Input/output error
+ERROR[ogle_audio]: odelay error: Input/output error
+ERROR[ogle_audio]: odelay error: Input/output error
+###!!!!##!!!!#--#!!###!!#!!!!-##!!!!#--###!!!##!!!!#!-###!!!#--###!!!!##!!!#-###!!--####!!#!!!!#--####!!#!!!!#-##!!##--###!!!##!!!#-##!!#--!!###!!!!!!##!-##!!##--###!!!##!!!!#-##!!!##-###!!!!#-###!!!#--###!!!!##!!--####!!#!!!!#-##!!##--###!!!##!!!!#-###!#!!-####!!--###!!!!!!###!!-###!!!#-
+
+
+
+[ebuild   R   ] media-libs/libdvdcss-1.2.8
+[ebuild   R   ] media-libs/libdvdread-0.9.5
+[ebuild   R   ] media-video/ogle-0.9.2-r1
+[ebuild   R   ] media-libs/a52dec-0.7.4-r5
+
+these are the same versions running on suse without trouble.
+
+initially I had libdvdread 0.9.4 from gentoo patched with
+  <A HREF="http://dvdauthor.sourceforge.net/patches/libdvdread-0.9.4.patch.gz">http://dvdauthor.sourceforge.net/patches/libdvdread-0.9.4.patch.gz</A>
+
+I build 0.9.5 without that patch , neither seems to affect the above issue.
+
+
+Thanks in advance if you can suggest how to resolve these issues. Ogle is  
+a great play back tool.
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000016.html">[Ogle-devel] [PATCH] ogle - updating TTN in get_VTS_TT/get_VTS_PTT
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#15">[ date ]</a>
+              <a href="thread.html#15">[ thread ]</a>
+              <a href="subject.html#15">[ subject ]</a>
+              <a href="author.html#15">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

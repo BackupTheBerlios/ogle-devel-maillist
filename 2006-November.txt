@@ -1,0 +1,173 @@
+From d4bjorn at dtek.chalmers.se  Sat Nov  4 14:16:08 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Sat, 4 Nov 2006 14:16:08 +0100
+Subject: [Ogle-devel] strange behavior of DVDFileStat
+In-Reply-To: <Pine.LNX.4.64.0610261929530.30827@grozny.maths.univ-evry.fr>
+References: <Pine.LNX.4.64.0610261929530.30827@grozny.maths.univ-evry.fr>
+Message-ID: <20061104131608.GA23403@dtek.chalmers.se>
+
+Thu Oct 26 2006, Vincent Torri wrote:
+
+
+Hi.
+
+> I fear a corruption of the memory, but I don't know where. There might be 
+> a bug in my program too.
+> 
+> 
+> Can someone tell me if there's a bug in my implementation, or if there's a 
+> known bug with libdvdread / gtk, or something else ?
+> 
+
+The problem is that libdvdread is compiled with large file support
+(CFLAGS = -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64)
+and your program is not so off_t/size_t and so on may have different sizes.
+
+You also use the size values in the dvd_stat_t as int when they infact
+are off_t.
+
+Your get_size() function returns an int but the size of buf.size is off_t.
+
+Set your CFLAGS to largefile support as above.
+Handle the sizes as off_t not int (off_t is probably 64 bit when compiled for
+largefile).
+Change your treestore to support off_t or use some type that can handle 64bit
+gint64 perhaps.
+And change your printfs to print 64bit numbers instead of 32 (%ld -> %lld
+depending on your platform).
+Now everything should work.
+
+Hope this helps.
+
+/Bj|rn
+
+
+
+From d4bjorn at dtek.chalmers.se  Sat Nov  4 15:37:38 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Sat, 4 Nov 2006 15:37:38 +0100
+Subject: [Ogle-devel] War on magic numbers
+In-Reply-To: <Pine.LNX.4.63.0610282022110.27792@kahlo.cs.duke.edu>
+References: <Pine.LNX.4.63.0610282022110.27792@kahlo.cs.duke.edu>
+Message-ID: <20061104143738.GB23403@dtek.chalmers.se>
+
+
+Hi.
+
+Sat Oct 28 2006, Justin Moore wrote:
+> 
+>     Too many places in the codebase have "magic numbers": hard-coded 
+> constants that should really be replaced with #define'd values or 
+> enum'ed values.  A few questions:
+> 
+> o do you prefer #define'd values or enums?
+
+For these things probably #defines if you don't have a particular reason
+to use enums.
+
+> 
+> o should I create a separete dvdread/constants.h or should I place the 
+> values in the header file that matches the .c file in which they're 
+> contained (e.g., FPS_2500 and FPS_2997 go in ifo_print.h or should I put 
+> everything in *_types.h?
+
+Things that has to do with fields in ifo_types.h should go in ifo_types.h
+like video_format in video_attr_t:
+#define  xxxx_VIDEO_FORMAT_NTSC 0
+#define  xxxx_VIDEO_FORMAT_PAL 1
+
+Things that are internal to libdvdread should not be put in the
+installed header files.
+
+There should be a naming scheme. We need a prefix for the defines
+in installed header files. Instead of only VIDEO_FORMAT_NTSC it should
+probably be called DVDREAD_VIDEO_FORMAT_NTSC or something like that.
+
+> 
+> o what is the patch submission process?
+> 
+
+Send the patches to the ogle-devel list.
+(Keep them small, don't submit unrelated changes in the same patch,
+everything should compile after each patch is applied)
+
+/Bj|rn
+
+
+From vtorri at univ-evry.fr  Mon Nov  6 22:56:24 2006
+From: vtorri at univ-evry.fr (Vincent Torri)
+Date: Mon, 6 Nov 2006 22:56:24 +0100 (CET)
+Subject: [Ogle-devel] strange behavior of DVDFileStat
+In-Reply-To: <20061104131608.GA23403@dtek.chalmers.se>
+References: <Pine.LNX.4.64.0610261929530.30827@grozny.maths.univ-evry.fr>
+	<20061104131608.GA23403@dtek.chalmers.se>
+Message-ID: <Pine.LNX.4.64.0611062246030.13109@grozny.maths.univ-evry.fr>
+
+
+
+On Sat, 4 Nov 2006, Bj|rn Englund wrote:
+
+> Thu Oct 26 2006, Vincent Torri wrote:
+>
+>
+> The problem is that libdvdread is compiled with large file support
+> (CFLAGS = -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64)
+> and your program is not so off_t/size_t and so on may have different sizes.
+>
+> You also use the size values in the dvd_stat_t as int when they infact
+> are off_t.
+>
+> Your get_size() function returns an int but the size of buf.size is off_t.
+>
+> Set your CFLAGS to largefile support as above.
+> Handle the sizes as off_t not int (off_t is probably 64 bit when compiled for
+> largefile).
+> Change your treestore to support off_t or use some type that can handle 64bit
+> gint64 perhaps.
+> And change your printfs to print 64bit numbers instead of 32 (%ld -> %lld
+> depending on your platform).
+> Now everything should work.
+
+Hey,
+
+indeed, that was the problem. It works very well, now.
+
+thank you very much :)
+
+Vincent Torri
+
+
+From justin at cs.duke.edu  Mon Nov 13 02:51:32 2006
+From: justin at cs.duke.edu (Justin Moore)
+Date: Sun, 12 Nov 2006 17:51:32 -0800
+Subject: [Ogle-devel] War on magic numbers
+In-Reply-To: <20061104143738.GB23403@dtek.chalmers.se>
+References: <Pine.LNX.4.63.0610282022110.27792@kahlo.cs.duke.edu>
+	<20061104143738.GB23403@dtek.chalmers.se>
+Message-ID: <1163382692.20838.12.camel@localhost.localdomain>
+
+
+> > o what is the patch submission process?
+> > 
+> 
+> Send the patches to the ogle-devel list.
+> (Keep them small, don't submit unrelated changes in the same patch,
+> everything should compile after each patch is applied)
+
+Here's the first patch that creates the named constants for IFO data
+using #define's.  Let me know if any names should be changed.
+
+-jdm
+
+-- 
+Department of Computer Science, Duke University, Durham, NC 27708-0129
+Email:  justin at cs.duke.edu
+Web:    http://www.cs.duke.edu/~justin/
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: ifo_magic_numbers_header.patch
+Type: text/x-patch
+Size: 3569 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/ogle-devel/attachments/20061112/165c8c23/attachment.bin>
+

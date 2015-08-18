@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] War on magic numbers
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20War%20on%20magic%20numbers&In-Reply-To=%3CPine.LNX.4.63.0610282022110.27792%40kahlo.cs.duke.edu%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000026.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] War on magic numbers</H1>
+    <B>Justin Moore</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20War%20on%20magic%20numbers&In-Reply-To=%3CPine.LNX.4.63.0610282022110.27792%40kahlo.cs.duke.edu%3E"
+       TITLE="[Ogle-devel] War on magic numbers">justin at cs.duke.edu
+       </A><BR>
+    <I>Sun Oct 29 02:26:13 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000026.html">[Ogle-devel] strange behavior of DVDFileStat
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>
+    Too many places in the codebase have &quot;magic numbers&quot;: hard-coded 
+constants that should really be replaced with #define'd values or 
+enum'ed values.  A few questions:
+
+o do you prefer #define'd values or enums?
+
+o should I create a separete dvdread/constants.h or should I place the 
+values in the header file that matches the .c file in which they're 
+contained (e.g., FPS_2500 and FPS_2997 go in ifo_print.h or should I put 
+everything in *_types.h?
+
+o what is the patch submission process?
+
+Thanks.
+-jdm
+
+Department of Computer Science, Duke University, Durham, NC 27708-0129
+Email:	<A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">justin at cs.duke.edu</A>
+Web:	<A HREF="http://www.cs.duke.edu/~justin/">http://www.cs.duke.edu/~justin/</A>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000026.html">[Ogle-devel] strange behavior of DVDFileStat
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/ogle-devel/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%2C%20ifo_types.h%20and%20VIDEO_TS.IFO&In-Reply-To=%3C4460F441.9010101%40cox.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000022.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO</H1>
+    <B>Russ Turner</B> 
+    <A HREF="mailto:ogle-devel%40lists.berlios.de?Subject=Re%3A%20%5BOgle-devel%5D%20libdvdread%2C%20ifo_types.h%20and%20VIDEO_TS.IFO&In-Reply-To=%3C4460F441.9010101%40cox.net%3E"
+       TITLE="[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO">russ.turner at cox.net
+       </A><BR>
+    <I>Wed May 10 10:40:52 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000022.html">[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Thank you for the information.  I will look at adding the libdvdread 
+disk_id function to my approach.
+
+Russ
+
+Bj|rn Englund wrote:
+&gt;<i> Mon May 08 2006, Russ Turner wrote:
+</I>&gt;<i> 
+</I>&gt;&gt;<i>I am writing an application that will automatically and reliably (!)
+</I>&gt;&gt;<i>determine the title of a commercial DVD.  Some DVD's provide enough
+</I>&gt;&gt;<i>information in a separate disc.id file, but others do not.  The
+</I>&gt;&gt;<i>&quot;Provider ID:&quot; field in VIDEO_TS.IFO sometimes has helpful data.  But
+</I>&gt;&gt;<i>in other cases, while there is useful information in the VIDEO_TS.IFO 
+</I>&gt;&gt;<i>file, it is not in &quot;Provider ID&quot; or the other data that is defined in 
+</I>&gt;&gt;<i>ifo_types.h and reported by libdvdread (ifo_dump).  The Sony movie 
+</I>&gt;&gt;<i>&quot;Radio&quot; is an example of such a DVD.  The name of the movie and the 
+</I>&gt;&gt;<i>studio can befound in VIDEO_TS.IFO with grep or cat, but is not reported 
+</I>&gt;&gt;<i>by libdvdread.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>Are there additional IFO types that I can add to the header file and the
+</I>&gt;&gt;<i>libdvdread programs that will capture this additional IFO information?
+</I>&gt;&gt;<i>
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> Yes, if you get the title name when doing a grep on the .IFO file the
+</I>&gt;<i> dvd probably implements Text Data. This is not completely implemented
+</I>&gt;<i> in libdvdread. There were very few dvds with text data before so we didn't
+</I>&gt;<i> have anything to test with. I haven't checked lately if more dvds are using
+</I>&gt;<i> it.
+</I>&gt;<i> 
+</I>&gt;<i> There will be many dvds where you won't be able to extract the title name
+</I>&gt;<i> automatically from. Are you going to add those titles in a separate database
+</I>&gt;<i> or just ignore them?
+</I>&gt;<i> If you are planning to use a separate db you should
+</I>&gt;<i> use the disc_id function in libdvdread to identify the dvd.
+</I>&gt;<i> It md5sums the first 10 ifo files on a disc.
+</I>&gt;<i> Although this won't guarantee the disc_id to be 100% unique I haven't
+</I>&gt;<i> seen any discs where it fails, and it works if you have copies of the
+</I>&gt;<i> dvd files on hd as well, unlike approaches where info from the udf/iso
+</I>&gt;<i> filesystem on the dvd is used. Of course you could use a combination of both.
+</I>&gt;<i> 
+</I>&gt;<i> /Bj|rn
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> Ogle-devel mailing list
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/ogle-devel">Ogle-devel at lists.berlios.de</A>
+</I>&gt;<i> <A HREF="http://lists.berlios.de/mailman/listinfo/ogle-devel">http://lists.berlios.de/mailman/listinfo/ogle-devel</A>
+</I>&gt;<i> 
+</I>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000022.html">[Ogle-devel] libdvdread, ifo_types.h and VIDEO_TS.IFO
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/ogle-devel">More information about the Ogle-devel
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,239 @@
+From martin.piskernig at univie.ac.at  Sun Dec  3 10:43:18 2006
+From: martin.piskernig at univie.ac.at (Martin Piskernig)
+Date: Sun, 3 Dec 2006 10:43:18 +0100
+Subject: [Ogle-devel] Ogle release?
+Message-ID: <200612031043.18548.martin.piskernig@univie.ac.at>
+
+Hi!
+
+What are your plans regarding an ogle release? The last release (0.9.2) 
+is from over 3 years ago. I think the changes in CVS would justify a 
+new release. What do you think about it? What are your plans?
+
+Kind regards,
+Martin
+
+
+From d4bjorn at dtek.chalmers.se  Sat Dec  9 10:51:08 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Sat, 9 Dec 2006 10:51:08 +0100
+Subject: [Ogle-devel] Ogle release?
+In-Reply-To: <200612031043.18548.martin.piskernig@univie.ac.at>
+References: <200612031043.18548.martin.piskernig@univie.ac.at>
+Message-ID: <20061209095108.GA9591@dtek.chalmers.se>
+
+Sun Dec 03 2006, Martin Piskernig wrote:
+> 
+> What are your plans regarding an ogle release? The last release (0.9.2) 
+> is from over 3 years ago. I think the changes in CVS would justify a 
+> new release. What do you think about it? What are your plans?
+> 
+
+Hi, yes I agree.
+I will try to package the cvs source tomorrow so you can test it for
+compilation errors on different platforms and any obvious playing errors.
+If there are no major bugs, I'll make a release on friday.
+
+/Bj|rn
+
+
+From d4bjorn at dtek.chalmers.se  Wed Dec 13 20:07:31 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Wed, 13 Dec 2006 20:07:31 +0100
+Subject: [Ogle-devel] Ogle test release
+In-Reply-To: <20061209095108.GA9591@dtek.chalmers.se>
+References: <200612031043.18548.martin.piskernig@univie.ac.at>
+	<20061209095108.GA9591@dtek.chalmers.se>
+Message-ID: <20061213190731.GA3774@dtek.chalmers.se>
+
+To be able to start a new development cycle I intend to release
+www.dtek.chalmers.se/~dvd/dist/ogle-0.9.2-cvs.tar.gz
+(the latest CVS) as ogle-0.9.3 on friday/saturday if no one has any
+serious bug reports.
+Please try to compile and run.
+
+/Bj|rn
+
+
+From coyote at cojot.name  Thu Dec 14 09:31:28 2006
+From: coyote at cojot.name (coyote at cojot.name)
+Date: Thu, 14 Dec 2006 09:31:28 +0100 (CET)
+Subject: [Ogle-devel] Ogle test release
+Message-ID: <Pine.LNX.4.64.0612140931080.9690@thorbardin.lasthome.solace.krynn>
+
+
+On Wed, 13 Dec 2006, Bj|rn Englund wrote:
+
+> To be able to start a new development cycle I intend to release
+> www.dtek.chalmers.se/~dvd/dist/ogle-0.9.2-cvs.tar.gz
+> (the latest CVS) as ogle-0.9.3 on friday/saturday if no one has any
+> serious bug reports.
+> Please try to compile and run.
+
+It fails on:
+Solaris 10 06/06 SPARC (Sb2k) with Sun Studio 11.0:
+
+DEPDIR=.deps depmode=none /bin/bash ../depcomp \
+/opt/SUN-Studio-11.0/SUNWspro/bin/cc -DPACKAGE_NAME=\"\" 
+-DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" 
+-DPACKAGE_BUGREPORT=\"\" -DPACKAGE=\"ogle\" -DVERSION=\"0.9.2-cvs\" 
+-DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 
+-DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 
+-DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 
+-DWORDS_BIGENDIAN=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_STROPTS_H=1 
+-DHAVE_POLL_H=1 -DHAVE_SYS_POLL_H=1 -DHAVE_SYS_SELECT_H=1 -DHAVE_POLL=1 
+-DHAVE_XSHM=1 -DUSE_SOLARIS_XMU=1 -DHAVE_CLOCK_GETTIME=1 -DHAVE_MADVISE=1 
+-DHAVE_POSIX_SHM=1 -DUSE_POSIX_SHM=1 -DHAVE_MLIB=1 -DLIBOGLEAO_NULL= 
+-DLIBOGLEAO_SOLARIS= -DHAVE_XML=1 -DHAVE_LIBSOCKET=1 
+-DCONFIG_FILE=\"/usr/local/share/ogle/oglerc\"  -I. -I.  -I.. -I../include 
+-I/usr/openwin/include  -I/usr/sfw/include -I/usr/include/libxml2  -xCC 
+-fast -fast -xtarget=ultra3cu -xarch=v8plusb -xipo -xlibmil -xlibmopt -g 
+-c video_output_x11.c
+"video_output_x11.c", line 171: #warning: "todo"
+"video_output_x11.c", line 263: warning: argument #3 is incompatible with prototype:
+          prototype: pointer to const char : 
+"/usr/openwin/include/X11/Xlib.h", line 1574
+          argument : pointer to unsigned char
+"video_output_x11.c", line 1610: undefined symbol: xv_image
+"video_output_x11.c", line 1610: warning: implicit function declaration: XvShmCreateImage
+"video_output_x11.c", line 1610: undefined symbol: xv_port
+"video_output_x11.c", line 1610: undefined symbol: xv_id
+"video_output_x11.c", line 1611: non-unique member requires struct/union pointer: width
+"video_output_x11.c", line 1611: left operand of "->" must be pointer to struct/union
+"video_output_x11.c", line 1612: non-unique member requires struct/union pointer: height
+"video_output_x11.c", line 1612: left operand of "->" must be pointer to struct/union
+"video_output_x11.c", line 1619: undefined symbol: xv_image
+"video_output_x11.c", line 1619: undefined symbol: xv_port
+"video_output_x11.c", line 1619: undefined symbol: xv_id
+"video_output_x11.c", line 1620: non-unique member requires struct/union pointer: width
+"video_output_x11.c", line 1620: left operand of "->" must be pointer to struct/union
+"video_output_x11.c", line 1621: non-unique member requires struct/union pointer: height
+"video_output_x11.c", line 1621: left operand of "->" must be pointer to struct/union
+"video_output_x11.c", line 1998: warning: improper pointer/integer combination: op ">"
+"video_output_x11.c", line 2181: #warning: "todo"
+"video_output_x11.c", line 2188: #warning: "todo"
+"video_output_x11.c", line 2206: warning: argument #1 is incompatible with prototype:
+          prototype: pointer to unsigned char : "yuv2rgb.h", line 47
+          argument : pointer to char
+"video_output_x11.c", line 2210: #warning: "todo"
+"video_output_x11.c", line 2218: #warning: "todo"
+"video_output_x11.c", line 2230: warning: argument #1 is incompatible with prototype:
+          prototype: pointer to unsigned char : "screenshot.h", line 22
+          argument : pointer to char
+cc: acomp failed for video_output_x11.c
+gmake[1]: *** [video_output_x11.o] Error 2
+gmake[1]: Leaving directory 
+`/usr/local/src/ogle-0.9.2-cvs20061214/mpeg2_video'
+gmake: *** [all-recursive] Error 1
+
+I use this script to compile ogle:
+
+#!/bin/csh
+#
+# Generic definitions
+setenv SHELL /bin/bash
+setenv PKG_CONFIG /usr/bin/pkg-config
+setenv MAKE gmake
+setenv PERL /usr/bin/perl
+#
+# Sun ONE Studio 11.0
+setenv CFLAGS "-fast -xtarget=ultra3cu -xarch=v8plusb -xipo -xlibmil -xlibmopt -g"
+setenv CXXFLAGS "-fast -xtarget=ultra3cu -xarch=v8plusb -xipo -xlibmil -xlibmopt -g"
+setenv CC /opt/SUN-Studio-11.0/SUNWspro/bin/cc
+setenv CXX /opt/SUN-Studio-11.0/SUNWspro/bin/CC
+#
+./configure --prefix=/usr/local \
+          --with-libmlib=/usr \
+          --with-libjpeg=/usr/sfw \
+          --with-dvdread=/usr/local \
+          --with-liba52=/usr/local \
+          --with-libmad=/usr/local \
+          --with-xml-prefix=/usr
+
+
+The video_output_x11.c from my previous ogle snapshost still does compile 
+fine:
+
+root at ergoth:[/usr/local/src/ogle-0.9.2-cvs/mpeg2_video][526]# ls -ld video_output_x11.c
+-rw-r--r--   1 root     root       62727 Sep 29  2005 video_output_x11.c
+
+Regards,
+
+
+-- 
+,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*-,
+Vincent S. Cojot, Computer Engineering. STEP project. _.,-*~'`^`'~*-,._.,-*~
+Ecole Polytechnique de Montreal, Comite Micro-Informatique. _.,-*~'`^`'~*-,.
+Linux Xview/OpenLook resources page _.,-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'
+http://step.polymtl.ca/~coyote  _.,-*~'`^`'~*-,._ coyote at NOSPAM4cojot.name
+
+They cannot scare me with their empty spaces
+Between stars - on stars where no human race is
+I have it in me so much nearer home
+To scare myself with my own desert places.       - Robert Frost
+
+
+
+
+From thias at spam.spam.spam.spam.spam.spam.spam.egg.and.spam.freshrpms.net  Thu Dec 14 11:22:55 2006
+From: thias at spam.spam.spam.spam.spam.spam.spam.egg.and.spam.freshrpms.net (Matthias Saou)
+Date: Thu, 14 Dec 2006 11:22:55 +0100
+Subject: [Ogle-devel] Ogle test release
+In-Reply-To: <20061213190731.GA3774@dtek.chalmers.se>
+References: <200612031043.18548.martin.piskernig@univie.ac.at>
+	<20061209095108.GA9591@dtek.chalmers.se>
+	<20061213190731.GA3774@dtek.chalmers.se>
+Message-ID: <20061214112255.4360993e@python3.es.egwn.lan>
+
+Bj|rn Englund wrote :
+
+> To be able to start a new development cycle I intend to release
+> www.dtek.chalmers.se/~dvd/dist/ogle-0.9.2-cvs.tar.gz
+> (the latest CVS) as ogle-0.9.3 on friday/saturday if no one has any
+> serious bug reports.
+> Please try to compile and run.
+
+Compiles fine on Fedora Core 6 x86_64, but there are quite a lot of
+warnings (signedness, mostly), that maybe you'd like to take care of
+before the release :
+
+http://ftp.es6.freshrpms.net/pub/freshrpms/fedora/linux/testing/6/
+(the log.gz file contains the entire build log)
+
+I'm not able to test the build since I don't have any DVDs handy here
+at the office.
+
+Matthias
+
+-- 
+Clean custom Red Hat Linux rpm packages : http://freshrpms.net/
+Fedora Core release 6 (Zod) - Linux kernel 2.6.18-1.2835.fc6
+Load : 0.12 0.33 0.21
+
+
+From d4bjorn at dtek.chalmers.se  Thu Dec 14 20:35:21 2006
+From: d4bjorn at dtek.chalmers.se (Bj|rn Englund)
+Date: Thu, 14 Dec 2006 20:35:21 +0100
+Subject: [Ogle-devel] Ogle test release
+In-Reply-To: <Pine.LNX.4.64.0612140931080.9690@thorbardin.lasthome.solace.krynn>
+References: <Pine.LNX.4.64.0612140931080.9690@thorbardin.lasthome.solace.krynn>
+Message-ID: <20061214193521.GA28224@dtek.chalmers.se>
+
+Thu Dec 14 2006, coyote at cojot.name wrote:
+> 
+> On Wed, 13 Dec 2006, Bj|rn Englund wrote:
+
+> > www.dtek.chalmers.se/~dvd/dist/ogle-0.9.2-cvs.tar.gz
+
+> It fails on:
+> Solaris 10 06/06 SPARC (Sb2k) with Sun Studio 11.0:
+> 
+
+> "video_output_x11.c", line 1610: undefined symbol: xv_image
+
+Ok, new try same url
+
+/Bj|rn
+
+
+

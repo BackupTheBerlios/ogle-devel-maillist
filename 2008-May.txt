@@ -1,0 +1,34 @@
+From richardjones at optushome.com.au  Tue May 20 08:25:04 2008
+From: richardjones at optushome.com.au (Richard Jones)
+Date: Tue, 20 May 2008 16:25:04 +1000
+Subject: [Ogle-devel] Any activity
+Message-ID: <200805200625.m4K6P4NN013181@mail12.syd.optusnet.com.au>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://lists.berlios.de/pipermail/ogle-devel/attachments/20080520/1ae1d4ed/attachment.ksh>
+
+From diego at biurrun.de  Tue May 27 02:49:43 2008
+From: diego at biurrun.de (Diego Biurrun)
+Date: Tue, 27 May 2008 02:49:43 +0200
+Subject: [Ogle-devel] Any activity
+In-Reply-To: <200805200625.m4K6P4NN013181@mail12.syd.optusnet.com.au>
+References: <200805200625.m4K6P4NN013181@mail12.syd.optusnet.com.au>
+Message-ID: <20080527004943.GR2126@biurrun.de>
+
+On Tue, May 20, 2008 at 04:25:04PM +1000, Richard Jones wrote:
+> I'd like to look into fixing some issues with reading some DVDs. Is
+> there anyone active in the libdvdread project any more? Should I look
+> elsewhere? Should I take it over?
+
+libdvdread has effectively been forked due to lack of activity here
+along with a refreshed libdvdnav effort:
+
+https://lists.mplayerhq.hu/mailman/listinfo/dvdnav-discuss
+
+Some MPlayer developers are working on it.  I don't know the current
+status.  Try asking on that mailing list.
+
+Diego
+
+
